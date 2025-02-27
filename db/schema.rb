@@ -10,5 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_27_145202) do
+  create_table "presentations", force: :cascade do |t|
+    t.integer "screen_id", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["screen_id"], name: "index_presentations_on_screen_id"
+  end
+
+  create_table "screens", force: :cascade do |t|
+    t.string "name"
+    t.string "city"
+    t.text "weather_info"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "presentations", "screens"
 end
