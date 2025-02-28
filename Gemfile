@@ -35,9 +35,6 @@ gem "jbuilder"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
-
-gem 'pg', group: :production
-
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 
@@ -59,8 +56,14 @@ gem 'activestorage', '~> 7.1'
 gem 'browser'
 
 
+# Use PostgreSQL as the database for Active Record in production
+group :production do
+  gem 'pg', '~> 1.1'
+end
+
+
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem 'sqlite3', '~> 1.4'
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ]
 end
 
