@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'screens/show'
-
-  # Exemple d'URL pour chaque télé : /screens/1 et /screens/2
   resources :screens, only: [:show]
+  root 'screens#show', id: 1
 end
