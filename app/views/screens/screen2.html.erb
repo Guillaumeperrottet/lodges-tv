@@ -1,17 +1,100 @@
-<div class="screen2">
-  <!-- Fond de diapo -->
-  <div class="background">
-    <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740986926/jenn-kosar-jrWoDRmhwRY-unsplash_yenmm7.jpg", alt: "Fond de diapo" %>
-  </div>
-
-  <!-- Contenu principal -->
-  <div class="content">
-    <h1>Titre de la Diapo</h1>
-    <p>Ici, une description ou un message à faire passer. Cette zone peut contenir plusieurs lignes de texte pour expliquer l'information.</p>
-
-    <!-- Bloc QR code -->
+<div class="slider">
+  <!-- Slide 1 -->
+  <div class="slide active">
+    <div class="background">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740986926/jenn-kosar-jrWoDRmhwRY-unsplash_yenmm7.jpg", alt: "Fond de diapo" %>
+    </div>
+    <!-- Contenu spécifique à la slide (texte, etc.) -->
+    <div class="header">
+      <h1>Restaurants</h1>
+    </div>
+    <!-- QR Code positionné en bas -->
     <div class="qr-code">
-      <%= image_tag "https://res.cloudinary.com/ton_cloudinary/image/upload/v1234567890/qr-placeholder.png", alt: "QR Code" %>
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740987491/qr-code-screen2-resto_neotzo.png", alt: "QR Code" %>
     </div>
   </div>
+
+  <!-- Slide 2 -->
+  <div class="slide">
+    <div class="background">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989064/joel-jasmin-forestbird-znoL1m6MD_k-unsplash_pskg5a.jpg", alt: "Fond de diapo" %>
+    </div>
+    <!-- Contenu spécifique à la slide (texte, etc.) -->
+    <div class="header">
+      <h1>Randonnées</h1>
+    </div>
+    <!-- QR Code positionné en bas -->
+    <div class="qr-code">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989131/qr-code-screen2-rando_cx6jyy.png", alt: "QR Code" %>
+    </div>
+  </div>
+
+    <!-- Slide 3 -->
+  <div class="slide">
+    <div class="background">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989299/kevin-laminto-4xbUFduTEY0-unsplash_dzb3lm.jpg", alt: "Fond de diapo" %>
+    </div>
+    <!-- Contenu spécifique à la slide (texte, etc.) -->
+    <div class="header">
+      <h1>Visites</h1>
+    </div>
+    <!-- QR Code positionné en bas -->
+    <div class="qr-code">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989363/qr-code-screen2-visites_tgge6d.png", alt: "QR Code" %>
+    </div>
+  </div>
+
+      <!-- Slide 4 -->
+  <div class="slide">
+    <div class="background">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989416/jelle-buurman-ZWSWyNLZ13g-unsplash_l8nj3e.jpg", alt: "Fond de diapo" %>
+    </div>
+    <!-- Contenu spécifique à la slide (texte, etc.) -->
+    <div class="header">
+      <h1>Kitesurf spots</h1>
+    </div>
+    <!-- QR Code positionné en bas -->
+    <div class="qr-code">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989548/qr-code-screen2-kite_h61p2i.png", alt: "QR Code" %>
+    </div>
+  </div>
+
+        <!-- Slide 5 -->
+  <div class="slide">
+    <div class="background">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989422/dmitrii-vaccinium-YEsccJQ8tpk-unsplash_spzkym.jpg", alt: "Fond de diapo" %>
+    </div>
+    <!-- Contenu spécifique à la slide (texte, etc.) -->
+    <div class="header">
+      <h1>Sorties à vélo</h1>
+    </div>
+    <!-- QR Code positionné en bas -->
+    <div class="qr-code">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989619/qr-code-screen2-ve%CC%81lo_devqay.png", alt: "QR Code" %>
+    </div>
+  </div>
+
+  <!-- Ajoute d'autres slides selon ton besoin -->
 </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const slides = document.querySelectorAll('.slider .slide');
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+    const intervalTime = 10000; // temps en ms (10 secondes)
+
+    function showNextSlide() {
+      // Retirer la classe active de la slide courante
+      slides[currentIndex].classList.remove('active');
+      // Calculer l'index de la slide suivante
+      currentIndex = (currentIndex + 1) % totalSlides;
+      // Ajouter la classe active à la slide suivante
+      slides[currentIndex].classList.add('active');
+    }
+
+    // Lancer le changement de slide à intervalles réguliers
+    setInterval(showNextSlide, intervalTime);
+  });
+</script>
