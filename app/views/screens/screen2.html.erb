@@ -4,11 +4,9 @@
     <div class="background">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740986926/jenn-kosar-jrWoDRmhwRY-unsplash_yenmm7.jpg", alt: "Fond de diapo" %>
     </div>
-    <!-- Contenu spécifique à la slide (texte, etc.) -->
     <div class="header">
       <h1>Restaurants</h1>
     </div>
-    <!-- QR Code positionné en bas -->
     <div class="qr-code">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740987491/qr-code-screen2-resto_neotzo.png", alt: "QR Code" %>
     </div>
@@ -19,82 +17,134 @@
     <div class="background">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989064/joel-jasmin-forestbird-znoL1m6MD_k-unsplash_pskg5a.jpg", alt: "Fond de diapo" %>
     </div>
-    <!-- Contenu spécifique à la slide (texte, etc.) -->
     <div class="header">
       <h1>Randonnées</h1>
     </div>
-    <!-- QR Code positionné en bas -->
     <div class="qr-code">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989131/qr-code-screen2-rando_cx6jyy.png", alt: "QR Code" %>
     </div>
   </div>
 
-    <!-- Slide 3 -->
+  <!-- Slide 3 -->
   <div class="slide">
     <div class="background">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989299/kevin-laminto-4xbUFduTEY0-unsplash_dzb3lm.jpg", alt: "Fond de diapo" %>
     </div>
-    <!-- Contenu spécifique à la slide (texte, etc.) -->
     <div class="header">
       <h1>Visites</h1>
     </div>
-    <!-- QR Code positionné en bas -->
     <div class="qr-code">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989363/qr-code-screen2-visites_tgge6d.png", alt: "QR Code" %>
     </div>
   </div>
 
-      <!-- Slide 4 -->
+  <!-- Slide 4 -->
   <div class="slide">
     <div class="background">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989416/jelle-buurman-ZWSWyNLZ13g-unsplash_l8nj3e.jpg", alt: "Fond de diapo" %>
     </div>
-    <!-- Contenu spécifique à la slide (texte, etc.) -->
     <div class="header">
       <h1>Kitesurf spots</h1>
     </div>
-    <!-- QR Code positionné en bas -->
     <div class="qr-code">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989548/qr-code-screen2-kite_h61p2i.png", alt: "QR Code" %>
     </div>
   </div>
 
-        <!-- Slide 5 -->
+  <!-- Slide 5 -->
   <div class="slide">
     <div class="background">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989422/dmitrii-vaccinium-YEsccJQ8tpk-unsplash_spzkym.jpg", alt: "Fond de diapo" %>
     </div>
-    <!-- Contenu spécifique à la slide (texte, etc.) -->
     <div class="header">
       <h1>Sorties à vélo</h1>
     </div>
-    <!-- QR Code positionné en bas -->
     <div class="qr-code">
       <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740989619/qr-code-screen2-ve%CC%81lo_devqay.png", alt: "QR Code" %>
     </div>
   </div>
 
-  <!-- Ajoute d'autres slides selon ton besoin -->
-</div>
-
+  <!-- Slide 6 - Météo -->
+    <div class="slide">
+      <div class="background" style="background: none;"></div>
+      <div class="header">
+        <h1>Météo Port-Saint-Louis du Rhône</h1>
+      </div>
+      <div class="content weather">
+        <div id="weather-container">
+          <p>Chargement de la météo...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    // --- SLIDER ---
     const slides = document.querySelectorAll('.slider .slide');
     let currentIndex = 0;
     const totalSlides = slides.length;
-    const intervalTime = 10000; // temps en ms (10 secondes)
+    const intervalTime = 10000; // 10 secondes
 
     function showNextSlide() {
-      // Retirer la classe active de la slide courante
       slides[currentIndex].classList.remove('active');
-      // Calculer l'index de la slide suivante
       currentIndex = (currentIndex + 1) % totalSlides;
-      // Ajouter la classe active à la slide suivante
       slides[currentIndex].classList.add('active');
     }
 
-    // Lancer le changement de slide à intervalles réguliers
     setInterval(showNextSlide, intervalTime);
+
+    // --- METEO (One Call API 3.0) ---
+    const weatherContainer = document.getElementById("weather-container");
+    const apiKey = "9556a80b8f760d847e244de8b062a80f"; // Remplace par ta clé One Call 3.0
+    const lat = 43.5; // Coordonnées approximatives de Port-Saint-Louis du Rhône
+    const lon = 4.9;
+    const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=fr`;
+
+    fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Vérifie que le tableau daily existe et contient au moins 4 entrées
+        if (!data.daily || data.daily.length < 4) {
+          throw new Error("Données météo incomplètes");
+        }
+
+        // Générer le HTML pour l'affichage des 4 jours (aujourd'hui + 3 jours)
+        let forecastHtml = `
+          <div class="forecast-container">
+        `;
+
+        data.daily.slice(0, 4).forEach((day, index) => {
+          const date = new Date(day.dt * 1000);
+          const dayName = date.toLocaleDateString("fr-FR", { weekday: "long" });
+          const temperature = Math.round(day.temp.day);  // arrondi de la T°
+          const description = day.weather[0].description;
+          const iconCode = day.weather[0].icon;
+          const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+          const dayLabel = index === 0 ? "Aujourd'hui" : dayName.charAt(0).toUpperCase() + dayName.slice(1);
+
+          forecastHtml += `
+            <div class="daily-forecast">
+              <h2>${dayLabel}</h2>
+              <img src="${iconUrl}" alt="Icône météo">
+              <p class="temperature">${temperature} °C</p>
+              <p class="description">${description}</p>
+            </div>
+          `;
+        });
+
+        forecastHtml += `</div>`; // fermeture de .forecast-container
+
+        weatherContainer.innerHTML = forecastHtml;
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération de la météo :", error);
+        weatherContainer.innerHTML = "<p class='error-message'>Impossible de récupérer la météo pour le moment.</p>";
+      });
   });
 </script>
