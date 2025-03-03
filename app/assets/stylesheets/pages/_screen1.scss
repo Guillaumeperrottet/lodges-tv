@@ -14,16 +14,16 @@
     visibility: hidden;
     opacity: 0;
     visibility: hidden;
-    transition: none; // plus d'effet de transition
+    transition: none;
     display: flex;
     flex-direction: column;
 
 
     &.slide-boissons {
       // Surcharge si tu veux la slide boissons en haut
-      justify-content: flex-start; // ou space-around, etc.
-      align-items: center; // tu peux garder le centrage horizontal
-      padding-top: 3rem; // pour un peu d’espace en haut
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 3rem;
     }
 
     &.active {
@@ -77,9 +77,9 @@
         }
 
       .subtitle {
-        font-size: 1.5vw; // un peu plus petit ?
+        font-size: 1.5vw;
         text-align: center;
-        margin-bottom: 10vw; // un peu d’espace avant le tableau
+        margin-bottom: 8vw;
         color: #544235;
       }
 
@@ -92,8 +92,8 @@
 
       .menu-two-columns{
         display: flex;
-        justify-content: center; // ou space-around, space-between...
-        gap: 2vw; // espace horizontal entre les deux tables
+        justify-content: center;
+        gap: 2vw;
 
         .menu-table {
           margin: 2rem auto;
@@ -102,8 +102,8 @@
           text-align: left;
 
           .spacer td {
-            padding-top: 1rem; // ou padding-bottom, selon l'effet souhaité
-            border: none; // assure-toi qu'il n'y a pas de bordure si besoin
+            padding-top: 2vw;
+            border: none;
           }
 
           td {
@@ -114,9 +114,9 @@
 
           .tight-break {
             display: block;
-            margin: 0; /* ou une petite marge si besoin */
+            margin: 0;
             padding: 0;
-            line-height: 0.8; /* ajuste selon l'espacement désiré */
+            line-height: 0.8;
           }
 
 
