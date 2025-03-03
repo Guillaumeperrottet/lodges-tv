@@ -52,7 +52,6 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'activestorage', '~> 7.1'
 gem 'browser'
 
-
 # Use PostgreSQL as the database for Active Record in production
 group :production do
   gem 'pg', '~> 1.1'

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
-  resources :screens, only: [:show]
-  root 'screens#show', id: 1
+  root 'screens#screen1'
+  get 'screen1', to: 'screens#screen1'
+  get 'screen2', to: 'screens#screen2'
 end
