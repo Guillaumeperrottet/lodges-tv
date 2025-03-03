@@ -1,0 +1,56 @@
+.screen2 {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  // Fond de diapo
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // Permet d'assurer que l'image couvre tout l'espace
+    }
+  }
+
+  // Contenu principal par-dessus le fond
+  .content {
+    position: relative;
+    z-index: 2; // Assure que le contenu reste visible au-dessus du fond
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      max-width: 800px; // Pour éviter des lignes trop longues
+    }
+
+    .qr-code {
+      width: 150px;
+      height: 150px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
