@@ -52,50 +52,48 @@
 
     .content {
       position: relative;
-      z-index: 1; /* au-dessus du fond */
-      width: 80%; /* limite la largeur du contenu */
+      z-index: 1;
+      width: 80%;
       margin: 0 auto;
-      color: #000; /* par défaut, texte noir sur fond clair */
+      color: #000;
 
       &.center {
         text-align: center;
-        color: #fff; /* si l'image de fond est sombre, texte blanc */
+        color: #fff;
       }
 
       .main-title {
         font-size: 8vw;
         font-weight: bold;
-        margin-bottom: 30rem;
+        margin-bottom: 25vw;
         text-align: left;
       }
 
       .subtitle-accueil{
           font-size: 4vw;
-          margin-bottom: 2rem; // ou la marge que tu veux
-          color: #fff;        // si tu veux qu’il soit blanc
+          margin-bottom: 2vw;
+          color: #fff;
           text-align: left;
         }
 
       .subtitle {
-        font-size: 1.5rem; // un peu plus petit ?
+        font-size: 1.5vw; // un peu plus petit ?
         text-align: center;
-        margin-bottom: 10rem; // un peu d’espace avant le tableau
+        margin-bottom: 10vw; // un peu d’espace avant le tableau
         color: #544235;
       }
 
       .section-title {
-        font-size: 6rem;
+        font-size: 6vw;
         font-weight: bold;
         text-align: center;
-        margin-top: 4rem;
+        margin-top: 4vw;
       }
 
       .menu-two-columns{
-
         display: flex;
         justify-content: center; // ou space-around, space-between...
-        gap: 2rem; // espace horizontal entre les deux tables
-
+        gap: 2vw; // espace horizontal entre les deux tables
 
         .menu-table {
           margin: 2rem auto;
@@ -103,14 +101,27 @@
           border-collapse: collapse;
           text-align: left;
 
-          td {
-            padding: 0.5rem 1rem;
-            vertical-align: top;
-            font-size: 2.5rem;
+          .spacer td {
+            padding-top: 1rem; // ou padding-bottom, selon l'effet souhaité
+            border: none; // assure-toi qu'il n'y a pas de bordure si besoin
           }
 
+          td {
+            padding: 0.1vw 1rem;
+            vertical-align: top;
+            font-size: 2.5vw;
+          }
+
+          .tight-break {
+            display: block;
+            margin: 0; /* ou une petite marge si besoin */
+            padding: 0;
+            line-height: 0.8; /* ajuste selon l'espacement désiré */
+          }
+
+
           .light-text {
-            font-size: 1.9rem;
+            font-size: 1.9vw;
             font-weight: normal;
             color: #666;
           }
@@ -120,14 +131,14 @@
 
       .speech-bubble-top-right {
         position: absolute;
-        top: 2rem;
+        top: 2vw;
         right: 5%;
         width: 200px;
         padding: 1.5rem;
         background: #fff;
         border: 2px solid #000;
         border-radius: 10px;
-        font-size: 1.5rem;
+        font-size: 1.5vw;
         text-align: center;
 
         /* Petite pointe de la bulle */
@@ -144,14 +155,14 @@
 
       .speech-bubble-bottom-right {
         position: absolute;
-        bottom: -1.5rem;
-        right: 4rem;
-        width: 200px;
-        padding: 1.5rem;
+        bottom: 0.5vw;
+        right: 4vw;
+        width: 250px;
+        padding: 1.5vw;
         background: #fff;
         border: 2px solid #000;
         border-radius: 10px;
-        font-size: 1.5rem;
+        font-size: 1.5vw;
         text-align: center;
 
         &:after {
@@ -168,8 +179,8 @@
 
       .two-columns {
         display: flex;
-        gap: 2rem;
-        margin-top: 4rem;
+        gap: 2vw;
+        margin-top: 4vw;
         justify-content: space-around;
 
         .column {
@@ -177,13 +188,14 @@
           max-width: 400px;
 
           h2 {
-            font-size: 2.5rem;
+            font-size: 2.5vw;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.5vw;
           }
 
           p {
             line-height: 1.8;
+            font-size: 2vw;
           }
         }
       }
@@ -193,8 +205,8 @@
 
 .logo-spot {
   position: absolute;
-  top: 1rem;
-  left: -3rem;
+  top: 1vw;
+  left: -3vw;
   z-index: 2; /* Pour qu'il soit au-dessus du fond */
 
   img {
