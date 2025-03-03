@@ -1,4 +1,168 @@
+<div class="slider-screen1">
+  <!-- Slide 1 : Bienvenue aux Lodges -->
+  <div class="slide">
+    <!-- Option 1 : utiliser une image de fond directement via img tag -->
+    <div class="background">
+      <!-- Remplace l'URL par ton image Cloudinary ou autre -->
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999085/lodges-de-camargue-13_nzexzj.jpg", alt: "Fond Slide 1" %>
+    </div>
+    <div class="content center">
+      <h1 class="main-title">Bienvenue<br>aux Lodges</h1>
+      <p class="subtitle">Today is a good day to be happy</p>
+    </div>
+  </div>
 
-    <h1>Bienvenue sur l'écran 1</h1>
-    <p>Ceci est la présentation pour le premier écran.</p>
-    <!-- Vous pouvez ajouter ici du contenu dynamique ou du CSS personnalisé -->
+  <!-- Slide 2 : Boissons -->
+  <div class="slide slide-boissons active">
+    <div class="background white-bg"><!-- Fond blanc ou couleur de ton choix --></div>
+    <div class="content">
+      <!-- LOGO LE SPOT -->
+      <div class="logo-spot">
+        <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
+      </div>
+
+      <h1 class="section-title">BOISSONS</h1>
+      <p class="subtitle">choix en vitrine</p>
+        <div class="menu-two-columns">
+          <!-- Colonne de gauche -->
+          <table class="menu-table">
+            <tbody>
+              <tr>
+                <td>Soda</td>
+                <td>2,50</td>
+              </tr>
+              <tr>
+                <td>Jus</td>
+                <td>4,50</td>
+              </tr>
+              <tr>
+                <td>Bière pression</td>
+                <td>3,50</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Colonne de droite -->
+          <table class="menu-table">
+            <tbody>
+              <tr>
+                <td>Bière artisanale</td>
+                <td>4,50</td>
+              </tr>
+              <tr>
+                <td>Vins</td>
+                <td>Choix divers</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </table>
+      <div class="speech-bubble">
+        <p>« Profitez du rooftop ! »</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3 : Planchettes -->
+  <div class="slide">
+    <div class="background white-bg"></div>
+    <div class="content">
+
+      <!-- LOGO LE SPOT -->
+      <div class="logo-spot">
+        <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
+      </div>
+
+      <h1 class="section-title">PLANCHETTES</h1>
+      <table class="menu-table">
+        <tbody>
+          <tr>
+            <td>Fruits frais<br><span class="light-text">de saison</span></td>
+            <td>8</td>
+          </tr>
+          <tr>
+            <td>Fromages<br><span class="light-text">variété avec confiture de figue</span></td>
+            <td>19</td>
+          </tr>
+          <tr>
+            <td>Charcuterie<br><span class="light-text">Variété</span></td>
+            <td>19</td>
+          </tr>
+          <tr>
+            <td>Terrine de taureau</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>Mixte</td>
+            <td>19</td>
+          </tr>
+          <tr>
+            <td>Potatoes au four</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>Plats cuisinés</td>
+            <td>9</td>
+          </tr>
+          <tr>
+            <td>Pot de glace<br><span class="light-text">4 arômes au choix</span></td>
+            <td>5</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speech-bubble">
+        <p>« Mmmmmm ! »</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4 : Bien commencer la journée -->
+  <div class="slide">
+    <div class="background white-bg"></div>
+    <div class="content">
+
+      <!-- LOGO LE SPOT -->
+      <div class="logo-spot">
+        <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
+      </div>
+
+      <h1 class="section-title">Bien commencer la journée</h1>
+      <div class="two-columns">
+        <div class="column">
+          <h2>A l'accueil</h2>
+          <p>
+            Buffet de petit déjeuner<br>
+            (œufs, fromages, jambons,<br>
+            pains, céréales, viennoiserie,<br>
+            boissons chaudes, etc…)
+          </p>
+        </div>
+        <div class="column">
+          <h2>Dans votre lodge</h2>
+          <p>
+            Commande possible pain frais,<br>
+            croissants ou autres viennoiseries<br>
+            à emporter le matin en chambre
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const slides = document.querySelectorAll('.slider-screen1 .slide');
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+    const intervalTime = 10000; // 10 secondes
+
+    // function showNextSlide() {
+    //   slides[currentIndex].classList.remove('active');
+    //   currentIndex = (currentIndex + 1) % totalSlides;
+    //   slides[currentIndex].classList.add('active');
+    // }
+
+    setInterval(showNextSlide, intervalTime);
+  });
+</script>
