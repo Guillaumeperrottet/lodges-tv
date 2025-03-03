@@ -1,6 +1,6 @@
 <div class="slider-screen1">
   <!-- Slide 1 : Bienvenue aux Lodges -->
-  <div class="slide">
+  <div class="slide active">
     <!-- Option 1 : utiliser une image de fond directement via img tag -->
     <div class="background">
       <!-- Remplace l'URL par ton image Cloudinary ou autre -->
@@ -143,7 +143,7 @@
 </div>
 
 <!-- Slide 4 : Bien commencer la journée -->
-<div class="slide slide-bien-commencer active">
+<div class="slide slide-bien-commencer">
   <div class="background white-bg"></div>
   <div class="content">
     <!-- LOGO LE SPOT -->
@@ -184,11 +184,11 @@
     const totalSlides = slides.length;
     const intervalTime = 10000; // 10 secondes
 
-    // function showNextSlide() {
-    //   slides[currentIndex].classList.remove('active');
-    //   currentIndex = (currentIndex + 1) % totalSlides;
-    //   slides[currentIndex].classList.add('active');
-    // }
+    function showNextSlide() {
+      slides[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % totalSlides;
+      slides[currentIndex].classList.add('active');
+    }
 
     setInterval(showNextSlide, intervalTime);
   });
