@@ -39,7 +39,7 @@
       img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* pour adapter l'image à l'écran */
+        // object-fit: cover; /* pour adapter l'image à l'écran */
       }
 
       &.white-bg {
@@ -61,10 +61,18 @@
       }
 
       .main-title {
-        font-size: 5rem;
+        font-size: 8vw;
         font-weight: bold;
-        margin-bottom: 1rem;
+        margin-bottom: 30rem;
+        text-align: left;
       }
+
+      .subtitle-accueil{
+          font-size: 4vw;
+          margin-bottom: 2rem; // ou la marge que tu veux
+          color: #fff;        // si tu veux qu’il soit blanc
+          text-align: left;
+        }
 
       .subtitle {
         font-size: 1.5rem; // un peu plus petit ?
@@ -174,7 +182,6 @@
 
           p {
             line-height: 1.8;
-            font-size: 2rem;
           }
         }
       }
