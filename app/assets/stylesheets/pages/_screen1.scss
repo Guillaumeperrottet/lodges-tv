@@ -100,7 +100,7 @@
           }
 
           .light-text {
-            font-size: 0.9rem;
+            font-size: 1.9rem;
             font-weight: normal;
             color: #666;
           }
@@ -108,7 +108,7 @@
       }
 
 
-      .speech-bubble {
+      .speech-bubble-top-right {
         position: absolute;
         top: 2rem;
         right: 5%;
@@ -132,10 +132,34 @@
         }
       }
 
+      .speech-bubble-bottom-right {
+        position: absolute;
+        bottom: -1.5rem;
+        right: 4rem;
+        width: 200px;
+        padding: 1.5rem;
+        background: #fff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        text-align: center;
+
+        &:after {
+          content: "";
+          position: absolute;
+          top: -20px; /* La pointe sera au-dessus */
+          left: 20px;
+          border-width: 10px;
+          border-style: solid;
+          /* Couleur pour pointer vers le haut */
+          border-color: transparent transparent #000 transparent;
+        }
+      }
+
       .two-columns {
         display: flex;
         gap: 2rem;
-        margin-top: 2rem;
+        margin-top: 4rem;
         justify-content: space-around;
 
         .column {
@@ -143,12 +167,14 @@
           max-width: 400px;
 
           h2 {
-            font-size: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: bold;
             margin-bottom: 0.5rem;
           }
 
           p {
-            line-height: 1.4;
+            line-height: 1.8;
+            font-size: 2rem;
           }
         }
       }
@@ -158,12 +184,12 @@
 
 .logo-spot {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  top: 1rem;
+  left: -3rem;
   z-index: 2; /* Pour qu'il soit au-dessus du fond */
 
   img {
-    width: 150px; /* Ajuste la taille selon tes besoins */
+    width: 180px; /* Ajuste la taille selon tes besoins */
     height: auto;
   }
 }

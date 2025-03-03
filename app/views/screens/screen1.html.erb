@@ -13,7 +13,7 @@
   </div>
 
   <!-- Slide 2 : Boissons -->
-  <div class="slide slide-boissons active">
+  <div class="slide slide-boissons">
     <div class="background white-bg"><!-- Fond blanc ou couleur de ton choix --></div>
     <div class="content">
       <!-- LOGO LE SPOT -->
@@ -57,35 +57,47 @@
           </table>
         </div>
       </table>
-      <div class="speech-bubble">
+      <div class="speech-bubble-top-right">
         <p>« Profitez du rooftop ! »</p>
       </div>
     </div>
   </div>
 
-  <!-- Slide 3 : Planchettes -->
-  <div class="slide">
-    <div class="background white-bg"></div>
-    <div class="content">
+<!-- Slide 3 : Planchettes -->
+<div class="slide">
+  <div class="background white-bg"></div>
+  <div class="content">
+    <!-- LOGO LE SPOT -->
+    <div class="logo-spot">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
+    </div>
 
-      <!-- LOGO LE SPOT -->
-      <div class="logo-spot">
-        <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
-      </div>
+    <h1 class="section-title">PLANCHETTES</h1>
 
-      <h1 class="section-title">PLANCHETTES</h1>
+    <!-- Deux colonnes pour le menu -->
+    <div class="menu-two-columns">
+      <!-- Colonne de gauche -->
       <table class="menu-table">
         <tbody>
           <tr>
-            <td>Fruits frais<br><span class="light-text">de saison</span></td>
+            <td>
+              Fruits frais<br>
+              <span class="light-text">de saison</span>
+            </td>
             <td>8</td>
           </tr>
           <tr>
-            <td>Fromages<br><span class="light-text">variété avec confiture de figue</span></td>
+            <td>
+              Fromages<br>
+              <span class="light-text">variété avec confiture de figue</span>
+            </td>
             <td>19</td>
           </tr>
           <tr>
-            <td>Charcuterie<br><span class="light-text">Variété</span></td>
+            <td>
+              Charcuterie<br>
+              <span class="light-text">Variété</span>
+            </td>
             <td>19</td>
           </tr>
           <tr>
@@ -97,6 +109,15 @@
             <td>19</td>
           </tr>
           <tr>
+            <td><span class="light-text">*servies avec pain</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Colonne de droite -->
+      <table class="menu-table">
+        <tbody>
+          <tr>
             <td>Potatoes au four</td>
             <td>6</td>
           </tr>
@@ -105,49 +126,55 @@
             <td>9</td>
           </tr>
           <tr>
-            <td>Pot de glace<br><span class="light-text">4 arômes au choix</span></td>
+            <td>
+              Pot de glace<br>
+              <span class="light-text">4 arômes au choix</span>
+            </td>
             <td>5</td>
           </tr>
         </tbody>
       </table>
-      <div class="speech-bubble">
-        <p>« Mmmmmm ! »</p>
+    </div>
+
+    <div class="speech-bubble-bottom-right">
+      <p>« Mmmmmm ! »</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4 : Bien commencer la journée -->
+<div class="slide slide-bien-commencer active">
+  <div class="background white-bg"></div>
+  <div class="content">
+    <!-- LOGO LE SPOT -->
+    <div class="logo-spot">
+      <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
+    </div>
+
+    <h1 class="section-title">Bien commencer la<br>journée</h1>
+
+    <!-- Deux colonnes -->
+    <div class="two-columns">
+      <div class="column">
+        <h2>A l'accueil</h2>
+        <p>
+          Buffet de petit déjeuner<br>
+          (œufs, fromages, jambons,<br>
+          pains, céréales, viennoiserie,<br>
+          boissons chaudes, etc…)
+        </p>
+      </div>
+      <div class="column">
+        <h2>Dans votre lodge</h2>
+        <p>
+          Commande possible pain frais,<br>
+          croissants ou autres viennoiseries
+          à emporter le matin en chambre
+        </p>
       </div>
     </div>
   </div>
-
-  <!-- Slide 4 : Bien commencer la journée -->
-  <div class="slide">
-    <div class="background white-bg"></div>
-    <div class="content">
-
-      <!-- LOGO LE SPOT -->
-      <div class="logo-spot">
-        <%= image_tag "https://res.cloudinary.com/dafkgjhwt/image/upload/v1740999268/2022_LOGO_LE_SPOT_V5_tcftpa.jpg", alt: "Logo LE SPOT" %>
-      </div>
-
-      <h1 class="section-title">Bien commencer la journée</h1>
-      <div class="two-columns">
-        <div class="column">
-          <h2>A l'accueil</h2>
-          <p>
-            Buffet de petit déjeuner<br>
-            (œufs, fromages, jambons,<br>
-            pains, céréales, viennoiserie,<br>
-            boissons chaudes, etc…)
-          </p>
-        </div>
-        <div class="column">
-          <h2>Dans votre lodge</h2>
-          <p>
-            Commande possible pain frais,<br>
-            croissants ou autres viennoiseries<br>
-            à emporter le matin en chambre
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 </div>
 
 <script>
