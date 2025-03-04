@@ -117,22 +117,3 @@
     font-weight: bold;
   }
 }
-
-
-
-@media (orientation: portrait) {
-  .slider {
-    // En portrait, on peut par exemple ajuster la hauteur et la largeur
-    width: 100vw;
-    height: 94.55vw;
-  }
-  .slide {
-    // Ajustements éventuels sur la disposition des éléments
-    .header {
-      padding: 1.60vw 0;
-      h1 {
-        font-size: 3.07vw;
-      }
-    }
-  }
-}
