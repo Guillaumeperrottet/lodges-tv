@@ -37,17 +37,21 @@
       position: relative;
       background-color: #C6965B;
       text-align: center;
-      padding: 30px 0;
+      padding: 30px 20px;
       z-index: 2;
       font-family: Poppins, sans-serif;
+      width: 100%; // Assurez-vous que le header prend toute la largeur
 
 
       h1 {
         margin: 0;
         color: #fff;
-        font-size: 120px;
+        font-size: 100px;
         font-weight: 900;
-        letter-spacing: 8px;
+        letter-spacing: 4px;
+        width: 100%; // Assurez-vous que h1 prend toute la largeur
+        overflow-wrap: break-word; // Aide à gérer les longs mots
+        hyphens: auto; // Active la césure si nécessaire
       }
     }
 
