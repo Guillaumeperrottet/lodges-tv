@@ -46,8 +46,8 @@
       h1 {
         margin: 0;
         color: #fff;
-        font-size: 120px; // Augmenter la taille selon tes besoins
-        font-weight: 900;
+        font-size: 140px; // Augmenter la taille selon tes besoins
+        font-weight: 1000;
         letter-spacing: 10px; // Espace entre les lettres
       }
     }
@@ -79,7 +79,7 @@
 
   .forecast-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr); // 2 colonnes
     gap: 2.13vw;
     margin-top: 2.13vw;
   }
