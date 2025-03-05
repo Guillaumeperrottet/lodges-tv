@@ -117,10 +117,10 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 40px; /* Increased gap */
+  gap: 10px; /* Increased gap */
   height: 100%;
   max-height: calc(100vh - 280px);
-  width: 100%; /* Slightly reduced width */
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -159,7 +159,7 @@
 .weather-icon img {
   width: 160px;
   height: 120px;
-  object-fit: contain;
+  // object-fit: contain;
 }
 
 .temperature {
