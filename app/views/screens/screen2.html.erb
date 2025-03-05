@@ -232,11 +232,11 @@
     .then(data => {
       // Wind data from current conditions
       if (data.current) {
-        const windSpeed = Math.round(data.current.wind_speed * 3.6); // Convert m/s to km/h
+        const windSpeed = Math.round(data.current.wind_speed * 1.94); // Convert m/s to km/h
         const windDeg = data.current.wind_deg;
 
         // Update wind elements
-        windSpeedElement.textContent = `${windSpeed} km/h`;
+        windSpeedElement.textContent = `${windSpeed} kts`;
 
         // Convert degrees to cardinal direction
         const directions = ["Nord", "Nord-Est", "Est", "Sud-Est", "Sud", "Sud-Ouest", "Ouest", "Nord-Ouest"];
@@ -250,102 +250,210 @@
         }
       }
 
-      // Get hourly forecast for chart
-      if (data.hourly && data.hourly.length >= 24) {
-        const hourlyData = data.hourly.slice(0, 24);
-        const times = hourlyData.map(hour => {
-          const date = new Date(hour.dt * 1000);
-          return date.getHours() + 'h';
-        });
+        // Get hourly forecast for chart
+        if (data.hourly && data.hourly.length >= 24) {
+          const hourlyData = data.hourly.slice(0, 24);
+          const times = hourlyData.map(hour => {
+            const date = new Date(hour.dt * 1000);
+            return date.getHours() + 'h';
+          });
 
-        const windSpeeds = hourlyData.map(hour => Math.round(hour.wind_speed * 3.6));
+          // Convert wind speeds from m/s to knots (multiply by 1.94)
+          const windSpeeds = hourlyData.map(hour => Math.round(hour.wind_speed * 1.94));
 
-        // Create wind chart - Fixed configuration
-        const ctx = document.getElementById('windChart').getContext('2d');
-        const windChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: times,
-            datasets: [{
-              label: 'Vitesse du vent (km/h)',
-              data: windSpeeds,
-              fill: false,
-              backgroundColor: '#C6965B',
-              borderColor: '#C6965B',
-              tension: 0.4,
-              pointRadius: 3,
-              pointBackgroundColor: '#C6965B'
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-              padding: {
-                left: 10,
-                right: 10,
-                top: 10,
-                bottom: 10
-              }
+          // Create wind chart with knots units
+          const ctx = document.getElementById('windChart').getContext('2d');
+          const windChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: times,
+              datasets: [{
+                label: 'Vitesse du vent (kts)',
+                data: windSpeeds,
+                fill: false,
+                backgroundColor: '#C6965B',
+                borderColor: '#C6965B',
+                tension: 0.4,
+                pointRadius: 3,
+                pointBackgroundColor: '#C6965B'
+              }]
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  color: 'rgba(0, 0, 0, 0.1)',
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  left: 10,
+                  right: 10,
+                  top: 10,
+                  bottom: 10
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.1)',
+                  },
+                  ticks: {
+                    font: {
+                      size: 14
+                    },
+                    callback: function(value) {
+                      return value + ' kts'; // Add units to the y-axis labels
+                    }
+                  }
                 },
-                ticks: {
-                  font: {
-                    size: 14
+                x: {
+                  grid: {
+                    display: false
+                  },
+                  ticks: {
+                    font: {
+                      size: 14
+                    },
+                    maxRotation: 0,
+                    maxTicksLimit: 8 // Limit the number of ticks to avoid overcrowding
                   }
                 }
               },
-              x: {
-                grid: {
+              plugins: {
+                legend: {
                   display: false
                 },
-                ticks: {
-                  font: {
-                    size: 14
-                  },
-                  maxRotation: 0,
-                  maxTicksLimit: 8 // Limit the number of ticks to avoid overcrowding
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      return context.parsed.y + ' kts'; // Add units to tooltip
+                    }
+                  }
                 }
               }
-            },
-            plugins: {
-              legend: {
-                display: false
-              }
             }
-          }
-        });
-      }
-
-      // For water temperature
-      // Note: OpenWeatherMap doesn't provide sea temperature in their standard API
-      // We're setting an example value - in production you would need to use a marine data API
-      waterTempElement.textContent = `19 °C`;
-      waterConditionsElement.textContent = `Calme`;
-
-      // Tide data - example values
-      // In production, you would need a dedicated tide API
-      const tideHighElements = document.querySelectorAll(".tide-high .tide-time, .tide-high .tide-height");
-      const tideLowElements = document.querySelectorAll(".tide-low .tide-time, .tide-low .tide-height");
-
-      if (tideHighElements.length >= 2) {
-        tideHighElements[0].textContent = "10:24";
-        tideHighElements[1].textContent = "0.7 m";
-      }
-
-      if (tideLowElements.length >= 2) {
-        tideLowElements[0].textContent = "16:45";
-        tideLowElements[1].textContent = "0.2 m";
-      }
+          });
+        }
     })
+
     .catch(error => {
       console.error("Erreur lors de la récupération des données marines :", error);
       marineContainer.innerHTML = "<p class='error-message'>Impossible de récupérer les données marines pour le moment.</p>";
     });
+
+    // --- STORMGLASS API FOR MARINE DATA ---
+    const stormglassApiKey = "d2c7d6b0-f9ca-11ef-95f7-0242ac130003-d2c7d714-f9ca-11ef-95f7-0242ac130003";
+    // Fix: Remove seaTemperature as it's not a valid parameter
+    const stormglassUrl = `https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${lon}&params=waterTemperature&source=noaa`;
+    const stormglassTideUrl = `https://api.stormglass.io/v2/tide/extremes/point?lat=${lat}&lng=${lon}`;
+
+    // Fetch water temperature data
+    fetch(stormglassUrl, {
+      headers: {
+        'Authorization': stormglassApiKey
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Stormglass data:", data);
+
+      // Check if we have water temperature data
+      if (data.hours && data.hours.length > 0) {
+        // Get the most recent water temperature reading
+        const latestHour = data.hours[0];
+
+        // Get the water temperature
+        if (latestHour.waterTemperature && Object.keys(latestHour.waterTemperature).length > 0) {
+          // Get the first available water temperature source
+          const source = Object.keys(latestHour.waterTemperature)[0];
+          const waterTemp = latestHour.waterTemperature[source];
+
+          if (waterTemp) {
+            // Update the water temperature display
+            waterTempElement.textContent = `${Math.round(waterTemp)} °C`;
+
+            // Set water conditions based on temperature
+            if (waterTemp < 10) {
+              waterConditionsElement.textContent = `Froide`;
+            } else if (waterTemp < 18) {
+              waterConditionsElement.textContent = `Fraîche`;
+            } else if (waterTemp < 24) {
+              waterConditionsElement.textContent = `Agréable`;
+            } else {
+              waterConditionsElement.textContent = `Chaude`;
+            }
+          }
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors de la récupération des données marines Stormglass:", error);
+      // Keep the fallback values in place
+    });
+
+  // Fetch tide data
+  fetch(stormglassTideUrl, {
+    headers: {
+      'Authorization': stormglassApiKey
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log("Stormglass tide data:", data);
+
+    if (data.data && data.data.length >= 2) {
+      // Get today's extremes
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const todayEnd = new Date(todayStart);
+      todayEnd.setDate(todayEnd.getDate() + 1);
+
+      // Filter tide extremes for today
+      const todayExtremes = data.data.filter(extreme => {
+        const time = new Date(extreme.time);
+        return time >= todayStart && time < todayEnd;
+      });
+
+      // Find the next high and low tides
+      const highTides = todayExtremes.filter(extreme => extreme.type === 'high');
+      const lowTides = todayExtremes.filter(extreme => extreme.type === 'low');
+
+      // Get next high tide
+      const tideHighElements = document.querySelectorAll(".tide-high .tide-time, .tide-high .tide-height");
+      if (highTides.length > 0 && tideHighElements.length >= 2) {
+        const nextHighTide = highTides[0];
+        const highTideTime = new Date(nextHighTide.time);
+        const formattedHighTime = `${highTideTime.getHours()}:${String(highTideTime.getMinutes()).padStart(2, '0')}`;
+        const highTideHeight = Math.round(nextHighTide.height * 10) / 10; // Round to 1 decimal place
+
+        tideHighElements[0].textContent = formattedHighTime;
+        tideHighElements[1].textContent = `${highTideHeight} m`;
+      }
+
+      // Get next low tide
+      const tideLowElements = document.querySelectorAll(".tide-low .tide-time, .tide-low .tide-height");
+      if (lowTides.length > 0 && tideLowElements.length >= 2) {
+        const nextLowTide = lowTides[0];
+        const lowTideTime = new Date(nextLowTide.time);
+        const formattedLowTime = `${lowTideTime.getHours()}:${String(lowTideTime.getMinutes()).padStart(2, '0')}`;
+        const lowTideHeight = Math.round(nextLowTide.height * 10) / 10; // Round to 1 decimal place
+
+        tideLowElements[0].textContent = formattedLowTime;
+        tideLowElements[1].textContent = `${lowTideHeight} m`;
+      }
+    }
+  })
+  .catch(error => {
+    console.error("Erreur lors de la récupération des données de marée Stormglass:", error);
+    // Keep the fallback values in place
+  });
 });
 </script>
