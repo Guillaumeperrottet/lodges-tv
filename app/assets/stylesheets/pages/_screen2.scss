@@ -106,7 +106,6 @@
   background-color: white;
 }
 
-/* Weather container with more space */
 #weather-container {
   width: 100%;
   height: 100%;
@@ -114,7 +113,6 @@
   color: #333;
 }
 
-/* Grid with more space between items */
 .forecast-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -122,11 +120,10 @@
   gap: 40px; /* Increased gap */
   height: 100%;
   max-height: calc(100vh - 280px);
-  width: 90%; /* Slightly reduced width */
+  width: 100%; /* Slightly reduced width */
   margin: 0 auto;
 }
 
-/* Cards with more internal spacing */
 .daily-forecast {
   background-color: white;
   border: 2px solid #eaeaea;
@@ -141,7 +138,7 @@
   height: 100%;
 }
 
-/* Day name with more space below */
+
 .daily-forecast h2 {
   margin: 0 0 15px 0; /* Increased bottom margin */
   font-size: 36px;
@@ -150,7 +147,7 @@
   text-transform: capitalize;
 }
 
-/* Weather icon with more space around it */
+
 .weather-icon {
   flex: 0 0 auto;
   display: flex;
@@ -165,7 +162,6 @@
   object-fit: contain;
 }
 
-/* Temperature with more space */
 .temperature {
   font-size: 48px;
   font-weight: bold;
@@ -173,7 +169,6 @@
   margin: 15px 0; /* Increased margins */
 }
 
-/* Description with more space */
 .description {
   font-size: 24px;
   text-transform: capitalize;
