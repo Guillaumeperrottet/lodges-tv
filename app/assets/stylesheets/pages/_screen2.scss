@@ -53,9 +53,8 @@
 
     .qr-code {
       position: absolute;
-      top: 150px;     // Position à partir du haut plutôt que du bas
-      bottom: auto;   // Annule bottom
-      left: 20px;
+      bottom: 450px;    // Espace par rapport au bas
+      left: 20px;      // Positionne à gauche
       right: auto;     // On annule la valeur “right: 20px;”
       transform: none; // Enlève le centrage
       z-index: 2;
