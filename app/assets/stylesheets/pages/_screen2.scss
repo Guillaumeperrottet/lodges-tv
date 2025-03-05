@@ -38,24 +38,25 @@
       width: 100vw;
       background-color: #C6965B;
       text-align: center;
-      padding: 4.2vw 0;
+      padding: 20px 0;
       z-index: 2;
-      font-family: sf-black;
+      font-family: Arial, Helvetica, sans-serif;
 
 
       h1 {
         margin: 0;
         color: #fff;
-        font-size: 6.8vw;
+        font-size: 48px;
         font-weight: bold;
       }
     }
 
     .qr-code {
       position: absolute;
-      bottom: 5vw; /* Increased from 2.1vw for better visibility */
-      left: 50%; /* Center horizontally */
-      transform: translateX(-50%); /* Center correctly */
+      bottom: 20px; /* Position higher from bottom */
+      right: 20px; /* Position from right instead of left */
+      left: auto; /* Center horizontally */
+      transform: none; /* Center correctly */
       z-index: 2;
       width: 100px; /* Fixed size in pixels */
       height: 100px;
