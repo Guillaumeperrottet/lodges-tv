@@ -53,16 +53,16 @@
 
     .qr-code {
       position: absolute;
-      bottom: 250px;    // Espace par rapport au bas
+      bottom: 50px;    // Espace par rapport au bas
       left: 20px;      // Positionne à gauche
       right: auto;     // On annule la valeur “right: 20px;”
       transform: none; // Enlève le centrage
       z-index: 2;
-      width: 200px;     // Taille réduite
+      width: 300px;     // Taille réduite
       height: 100px;
 
       img {
-        width: 200px;
+        width: 300px;
         height: 100px;
       }
     }
