@@ -160,3 +160,204 @@
   font-weight: bold;
   text-align: center;
 }
+
+/* Marine Conditions Styles */
+.content.weather-conditions {
+  position: relative;
+  z-index: 2;
+  height: calc(100vh - 200px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background-color: white;
+}
+
+#marine-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px 30px;
+  color: #333;
+}
+
+.marine-data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  height: 100%;
+  max-height: calc(100vh - 280px);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.marine-panel {
+  background-color: white;
+  border: 2px solid #eaeaea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+.marine-panel h2 {
+  margin: 0 0 20px 0;
+  font-size: 62px;
+  color: #333;
+  font-weight: bold;
+  text-transform: capitalize;
+  letter-spacing: 6px;
+}
+
+/* Wind Panel Styles */
+.wind-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #f0f8ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.wind-arrow {
+  display: block;
+  width: 12px;
+  height: 80px;
+  background: linear-gradient(to bottom, #C6965B 0%, #C6965B 50%, transparent 50%, transparent 100%);
+  position: relative;
+  transform-origin: center;
+}
+
+.wind-arrow:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -14px;
+  border-style: solid;
+  border-width: 0 20px 20px 20px;
+  border-color: transparent transparent #C6965B transparent;
+}
+
+.wind-speed {
+  font-size: 48px;
+  font-weight: bold;
+  color: #C6965B;
+  margin: 20px 0 10px;
+}
+
+.wind-direction {
+  font-size: 36px;
+  color: #666;
+  margin: 0;
+}
+
+/* Chart Panel Specific Fixes */
+.marine-panel.chart-panel {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.chart-panel h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.chart-panel canvas {
+  width: 100% !important;
+  height: calc(100% - 80px) !important; /* Subtract height of the heading */
+  max-height: 400px;
+  position: relative;
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+}
+
+/* Water Temperature Panel */
+.temp-icon {
+  font-size: 100px;
+  color: #4682B4;
+  margin: 20px 0;
+}
+
+.water-icon:before {
+  content: '🌊';
+  font-size: 100px;
+}
+
+.water-temp {
+  font-size: 48px;
+  font-weight: bold;
+  color: #4682B4;
+  margin: 20px 0 10px;
+}
+
+.water-conditions {
+  font-size: 36px;
+  color: #666;
+  margin: 0;
+}
+
+/* Chart Panel */
+.chart-panel {
+  padding: 15px;
+}
+
+#windChart {
+  width: 100% !important;
+  height: calc(100% - 80px) !important;
+  margin-top: 10px;
+}
+
+/* Tide Panel */
+.tide-info {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.tide-high, .tide-low {
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.tide-high {
+  background-color: rgba(198, 150, 91, 0.1);
+}
+
+.tide-low {
+  background-color: rgba(70, 130, 180, 0.1);
+}
+
+.tide-info p {
+  margin: 5px 0;
+}
+
+.tide-info p:first-child {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tide-time {
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.tide-height {
+  font-size: 32px;
+  color: #666;
+}
