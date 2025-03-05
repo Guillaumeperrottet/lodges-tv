@@ -92,13 +92,13 @@
             <div class="wind-icon">
               <i class="wind-arrow"></i>
             </div>
-            <p class="wind-speed">-- km/h</p>
+            <p class="wind-speed">-- kts</p>
             <p class="wind-direction">Direction: --</p>
           </div>
 
           <!-- Water Temperature Panel -->
           <div class="marine-panel water-panel">
-            <h2>Température Eau</h2>
+            <h2>Température Eau mer</h2>
             <div class="temp-icon">
               <i class="water-icon"></i>
             </div>
@@ -339,121 +339,191 @@
       marineContainer.innerHTML = "<p class='error-message'>Impossible de récupérer les données marines pour le moment.</p>";
     });
 
-    // --- STORMGLASS API FOR MARINE DATA ---
-    const stormglassApiKey = "d2c7d6b0-f9ca-11ef-95f7-0242ac130003-d2c7d714-f9ca-11ef-95f7-0242ac130003";
-    // Fix: Remove seaTemperature as it's not a valid parameter
-    const stormglassUrl = `https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${lon}&params=waterTemperature&source=noaa`;
-    const stormglassTideUrl = `https://api.stormglass.io/v2/tide/extremes/point?lat=${lat}&lng=${lon}`;
+      // --- STORMGLASS API WITH CACHING ---
+      const stormglassApiKey = "d2c7d6b0-f9ca-11ef-95f7-0242ac130003-d2c7d714-f9ca-11ef-95f7-0242ac130003";
+      const stormglassUrl = `https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${lon}&params=waterTemperature&source=noaa`;
+      const stormglassTideUrl = `https://api.stormglass.io/v2/tide/extremes/point?lat=${lat}&lng=${lon}`;
 
-    // Fetch water temperature data
-    fetch(stormglassUrl, {
-      headers: {
-        'Authorization': stormglassApiKey
+      // Function to check if cache is valid (less than 6 hours old)
+      function isCacheValid(cacheTime) {
+        if (!cacheTime) return false;
+
+        const cacheDate = new Date(cacheTime);
+        const now = new Date();
+        const hoursDiff = (now - cacheDate) / (1000 * 60 * 60); // Convert ms to hours
+
+        return hoursDiff < 6; // Cache is valid for 6 hours
       }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
+
+      // Function to fetch water temperature with caching
+      function fetchWaterTemperature() {
+        // Check if we have cached data
+        const cachedData = localStorage.getItem('sgWaterTempData');
+        const cacheTime = localStorage.getItem('sgWaterTempTime');
+
+        if (cachedData && isCacheValid(cacheTime)) {
+          console.log("Using cached water temperature data");
+          processWaterTempData(JSON.parse(cachedData));
+          return;
+        }
+
+        // If no valid cache, make the API call
+        console.log("Calling Stormglass API for water temperature");
+        fetch(stormglassUrl, {
+          headers: {
+            'Authorization': stormglassApiKey
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Stormglass water temp data:", data);
+
+          // Save to cache
+          localStorage.setItem('sgWaterTempData', JSON.stringify(data));
+          localStorage.setItem('sgWaterTempTime', new Date().toISOString());
+
+          // Process the data
+          processWaterTempData(data);
+        })
+        .catch(error => {
+          console.error("Erreur lors de la récupération des données marines Stormglass:", error);
+          // Check if we have old cached data we can use as fallback
+          if (cachedData) {
+            console.log("Using outdated cache as fallback");
+            processWaterTempData(JSON.parse(cachedData));
+          }
+        });
       }
-      return response.json();
-    })
-    .then(data => {
-      console.log("Stormglass data:", data);
 
-      // Check if we have water temperature data
-      if (data.hours && data.hours.length > 0) {
-        // Get the most recent water temperature reading
-        const latestHour = data.hours[0];
+      // Function to process water temperature data
+      function processWaterTempData(data) {
+        // Check if we have water temperature data
+        if (data.hours && data.hours.length > 0) {
+          // Get the most recent water temperature reading
+          const latestHour = data.hours[0];
 
-        // Get the water temperature
-        if (latestHour.waterTemperature && Object.keys(latestHour.waterTemperature).length > 0) {
-          // Get the first available water temperature source
-          const source = Object.keys(latestHour.waterTemperature)[0];
-          const waterTemp = latestHour.waterTemperature[source];
+          // Get the water temperature
+          if (latestHour.waterTemperature && Object.keys(latestHour.waterTemperature).length > 0) {
+            // Get the first available water temperature source
+            const source = Object.keys(latestHour.waterTemperature)[0];
+            const waterTemp = latestHour.waterTemperature[source];
 
-          if (waterTemp) {
-            // Update the water temperature display
-            waterTempElement.textContent = `${Math.round(waterTemp)} °C`;
+            if (waterTemp) {
+              // Update the water temperature display
+              waterTempElement.textContent = `${Math.round(waterTemp)} °C`;
 
-            // Set water conditions based on temperature
-            if (waterTemp < 10) {
-              waterConditionsElement.textContent = `Froide`;
-            } else if (waterTemp < 18) {
-              waterConditionsElement.textContent = `Fraîche`;
-            } else if (waterTemp < 24) {
-              waterConditionsElement.textContent = `Agréable`;
-            } else {
-              waterConditionsElement.textContent = `Chaude`;
+              // Set water conditions based on temperature
+              if (waterTemp < 10) {
+                waterConditionsElement.textContent = `Froide`;
+              } else if (waterTemp < 18) {
+                waterConditionsElement.textContent = `Fraîche`;
+              } else if (waterTemp < 24) {
+                waterConditionsElement.textContent = `Agréable`;
+              } else {
+                waterConditionsElement.textContent = `Chaude`;
+              }
             }
           }
         }
       }
-    })
-    .catch(error => {
-      console.error("Erreur lors de la récupération des données marines Stormglass:", error);
-      // Keep the fallback values in place
-    });
 
-  // Fetch tide data
-  fetch(stormglassTideUrl, {
-    headers: {
-      'Authorization': stormglassApiKey
-    }
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log("Stormglass tide data:", data);
+      // Function to fetch tide data with caching
+      function fetchTideData() {
+        // Check if we have cached data
+        const cachedData = localStorage.getItem('sgTideData');
+        const cacheTime = localStorage.getItem('sgTideTime');
 
-    if (data.data && data.data.length >= 2) {
-      // Get today's extremes
-      const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const todayEnd = new Date(todayStart);
-      todayEnd.setDate(todayEnd.getDate() + 1);
+        if (cachedData && isCacheValid(cacheTime)) {
+          console.log("Using cached tide data");
+          processTideData(JSON.parse(cachedData));
+          return;
+        }
 
-      // Filter tide extremes for today
-      const todayExtremes = data.data.filter(extreme => {
-        const time = new Date(extreme.time);
-        return time >= todayStart && time < todayEnd;
-      });
+        // If no valid cache, make the API call
+        console.log("Calling Stormglass API for tide data");
+        fetch(stormglassTideUrl, {
+          headers: {
+            'Authorization': stormglassApiKey
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Stormglass tide data:", data);
 
-      // Find the next high and low tides
-      const highTides = todayExtremes.filter(extreme => extreme.type === 'high');
-      const lowTides = todayExtremes.filter(extreme => extreme.type === 'low');
+          // Save to cache
+          localStorage.setItem('sgTideData', JSON.stringify(data));
+          localStorage.setItem('sgTideTime', new Date().toISOString());
 
-      // Get next high tide
-      const tideHighElements = document.querySelectorAll(".tide-high .tide-time, .tide-high .tide-height");
-      if (highTides.length > 0 && tideHighElements.length >= 2) {
-        const nextHighTide = highTides[0];
-        const highTideTime = new Date(nextHighTide.time);
-        const formattedHighTime = `${highTideTime.getHours()}:${String(highTideTime.getMinutes()).padStart(2, '0')}`;
-        const highTideHeight = Math.round(nextHighTide.height * 10) / 10; // Round to 1 decimal place
-
-        tideHighElements[0].textContent = formattedHighTime;
-        tideHighElements[1].textContent = `${highTideHeight} m`;
+          // Process the data
+          processTideData(data);
+        })
+        .catch(error => {
+          console.error("Erreur lors de la récupération des données de marée Stormglass:", error);
+          // Check if we have old cached data we can use as fallback
+          if (cachedData) {
+            console.log("Using outdated cache as fallback");
+            processTideData(JSON.parse(cachedData));
+          }
+        });
       }
 
-      // Get next low tide
-      const tideLowElements = document.querySelectorAll(".tide-low .tide-time, .tide-low .tide-height");
-      if (lowTides.length > 0 && tideLowElements.length >= 2) {
-        const nextLowTide = lowTides[0];
-        const lowTideTime = new Date(nextLowTide.time);
-        const formattedLowTime = `${lowTideTime.getHours()}:${String(lowTideTime.getMinutes()).padStart(2, '0')}`;
-        const lowTideHeight = Math.round(nextLowTide.height * 10) / 10; // Round to 1 decimal place
+      // Function to process tide data
+      function processTideData(data) {
+        if (data.data && data.data.length >= 2) {
+          // Get today's extremes
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const todayEnd = new Date(todayStart);
+          todayEnd.setDate(todayEnd.getDate() + 1);
 
-        tideLowElements[0].textContent = formattedLowTime;
-        tideLowElements[1].textContent = `${lowTideHeight} m`;
+          // Filter tide extremes for today
+          const todayExtremes = data.data.filter(extreme => {
+            const time = new Date(extreme.time);
+            return time >= todayStart && time < todayEnd;
+          });
+
+          // Find the next high and low tides
+          const highTides = todayExtremes.filter(extreme => extreme.type === 'high');
+          const lowTides = todayExtremes.filter(extreme => extreme.type === 'low');
+
+          // Get next high tide
+          const tideHighElements = document.querySelectorAll(".tide-high .tide-time, .tide-high .tide-height");
+          if (highTides.length > 0 && tideHighElements.length >= 2) {
+            const nextHighTide = highTides[0];
+            const highTideTime = new Date(nextHighTide.time);
+            const formattedHighTime = `${highTideTime.getHours()}:${String(highTideTime.getMinutes()).padStart(2, '0')}`;
+            const highTideHeight = Math.round(nextHighTide.height * 10) / 10; // Round to 1 decimal place
+
+            tideHighElements[0].textContent = formattedHighTime;
+            tideHighElements[1].textContent = `${highTideHeight} m`;
+          }
+
+          // Get next low tide
+          const tideLowElements = document.querySelectorAll(".tide-low .tide-time, .tide-low .tide-height");
+          if (lowTides.length > 0 && tideLowElements.length >= 2) {
+            const nextLowTide = lowTides[0];
+            const lowTideTime = new Date(nextLowTide.time);
+            const formattedLowTime = `${lowTideTime.getHours()}:${String(lowTideTime.getMinutes()).padStart(2, '0')}`;
+            const lowTideHeight = Math.round(nextLowTide.height * 10) / 10; // Round to 1 decimal place
+
+            tideLowElements[0].textContent = formattedLowTime;
+            tideLowElements[1].textContent = `${lowTideHeight} m`;
+          }
+        }
       }
-    }
-  })
-  .catch(error => {
-    console.error("Erreur lors de la récupération des données de marée Stormglass:", error);
-    // Keep the fallback values in place
-  });
-});
+
+      // Call the functions to fetch data
+      fetchWaterTemperature();
+      fetchTideData();
+  }); // <-- This closing parenthesis and curly brace pair was missing (to close the DOMContentLoaded)
 </script>
