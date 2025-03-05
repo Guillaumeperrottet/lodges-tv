@@ -46,12 +46,33 @@
       h1 {
         margin: 0;
         color: #fff;
-        font-size: 140px; // Augmenter la taille selon tes besoins
-        font-weight: 1000;
-        letter-spacing: 10px; // Espace entre les lettres
-        text-shadow: none; /* Remove any text shadow */
-        -webkit-font-smoothing: antialiased; /* Improve text rendering */
-        -moz-osx-font-smoothing: grayscale; /* Improve text rendering in Firefox */
+        font-size: 130px;
+        font-weight: 900;
+        letter-spacing: 8px;
+
+        /* Remove all potential shadow effects */
+        text-shadow: none !important;
+        -webkit-text-shadow: none !important;
+        -moz-text-shadow: none !important;
+
+        /* Improve text rendering */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        /* Prevent filter effects that might cause shadow */
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        /* Ensure no blurry edges from transforms */
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+
+        /* Force hardware acceleration */
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+
+        /* Prevent text edge artifacts */
+        outline: 0;
       }
     }
 

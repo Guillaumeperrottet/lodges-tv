@@ -19,6 +19,8 @@ body {
 
 h1, h2, h3 {
   font-family: Arial, Helvetica, sans-serif; /* Pour les titres */
+  text-shadow: none !important;
+  filter: none !important;
 }
 
 html {
