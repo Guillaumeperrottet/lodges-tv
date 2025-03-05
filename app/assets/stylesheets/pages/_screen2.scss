@@ -48,42 +48,7 @@
         color: #fff;
         font-size: 120px;
         font-weight: 900;
-        letter-spacing: 4px;
-
-        /* Remove all potential shadow effects */
-        text-shadow: none !important;
-        -webkit-text-shadow: none !important;
-        -moz-text-shadow: none !important;
-
-        /* Improve text rendering */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-
-        /* Prevent filter effects that might cause shadow */
-        filter: none !important;
-        -webkit-filter: none !important;
-
-        /* Ensure no blurry edges from transforms */
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
-
-        /* Force hardware acceleration */
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-
-        /* Prevent text edge artifacts */
-        outline: 0;
-
-        text-shadow: none !important;
-  -webkit-text-shadow: none !important;
-  -moz-text-shadow: none !important;
-  filter: none !important;
-  -webkit-filter: none !important;
-  box-shadow: none !important; /* Par précaution */
-  -webkit-box-shadow: none !important;
-  -webkit-font-smoothing: antialiased; /* ou none */
-  -webkit-text-stroke: 0px transparent; /* peut aider */
-  text-rendering: optimizeLegibility; /* ou geometricPrecision */
+        letter-spacing: 8px;
       }
     }
 
