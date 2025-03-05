@@ -73,6 +73,17 @@
 
         /* Prevent text edge artifacts */
         outline: 0;
+
+        text-shadow: none !important;
+  -webkit-text-shadow: none !important;
+  -moz-text-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  box-shadow: none !important; /* Par précaution */
+  -webkit-box-shadow: none !important;
+  -webkit-font-smoothing: antialiased; /* ou none */
+  -webkit-text-stroke: 0px transparent; /* peut aider */
+  text-rendering: optimizeLegibility; /* ou geometricPrecision */
       }
     }
 
