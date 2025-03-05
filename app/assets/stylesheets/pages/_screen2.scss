@@ -53,9 +53,9 @@
 
     .qr-code {
       position: absolute;
-      bottom: 2.1vw;
-      left: 12%;
-      transform: translateX(-50%);
+      bottom: 5vw; /* Increased from 2.1vw for better visibility */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%); /* Center correctly */
       z-index: 2;
       width: 100px; /* Fixed size in pixels */
       height: 100px;
