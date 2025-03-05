@@ -81,35 +81,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 5%;
-  background-color: white; /* Solid white background to hide wavy lines */
+  padding: 0 8%; /* Increased padding */
+  background-color: white;
 }
 
+/* Weather container with more space */
 #weather-container {
   width: 100%;
   height: 100%;
-  padding: 40px;
+  padding: 30px 50px; /* Increased padding */
   color: #333;
 }
 
+/* Grid with more space between items */
 .forecast-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 20px;
+  gap: 40px; /* Increased gap */
   height: 100%;
-  max-height: calc(100vh - 300px);
-  width: 100%;
+  max-height: calc(100vh - 280px);
+  width: 90%; /* Slightly reduced width */
   margin: 0 auto;
-  padding: 10px;
 }
 
+/* Cards with more internal spacing */
 .daily-forecast {
   background-color: white;
   border: 2px solid #eaeaea;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 25px 15px; /* More vertical padding */
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -118,41 +120,46 @@
   height: 100%;
 }
 
+/* Day name with more space below */
 .daily-forecast h2 {
-  margin: 0 0 5px 0;
+  margin: 0 0 15px 0; /* Increased bottom margin */
   font-size: 36px;
   color: #333;
   font-weight: bold;
   text-transform: capitalize;
 }
 
+/* Weather icon with more space around it */
 .weather-icon {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  margin: 10px 0 20px 0; /* More space below */
 }
 
 .weather-icon img {
-  width: 120px;
+  width: 100px;
   height: 120px;
   object-fit: contain;
 }
 
+/* Temperature with more space */
 .temperature {
   font-size: 48px;
   font-weight: bold;
   color: #C6965B;
-  margin: 5px 0;
+  margin: 15px 0; /* Increased margins */
 }
 
+/* Description with more space */
 .description {
   font-size: 24px;
   text-transform: capitalize;
   color: #666;
-  margin: 5px 0;
+  margin: 10px 0 5px 0;
 }
+
 
 .error-message {
   color: #ff3333;
