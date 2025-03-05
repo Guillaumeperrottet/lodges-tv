@@ -47,7 +47,7 @@
         margin: 0;
         color: #fff;
         font-size: 120px; // Augmenter la taille selon tes besoins
-        font-weight: bold;
+        font-weight: 900;
         letter-spacing: 10px; // Espace entre les lettres
       }
     }
@@ -78,9 +78,9 @@
   padding: 2.13vw;
 
   .forecast-container {
-    /* Disposition en grille de 4 colonnes (une pour chaque jour) */
     display: grid;
-    gap: 2.13vw; /* espace entre les colonnes */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2.13vw;
     margin-top: 2.13vw;
   }
 
