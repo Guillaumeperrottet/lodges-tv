@@ -70,52 +70,84 @@
   }
 }
 
-/* Extrait SCSS pour la météo */
+/* Weather Specific Styles */
+.content.weather {
+  position: relative;
+  z-index: 2;
+  height: calc(100vh - 200px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5%;
+}
 
 #weather-container {
-  /* Pour éviter que le texte ne soit blanc sur fond blanc, on met du noir */
-  color: #000;
-  padding: 2.13vw;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  color: #333;
+}
 
-  .forecast-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); // 2 colonnes
-    gap: 2.13vw;
-    margin-top: 2.13vw;
-  }
+.forecast-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 40px;
+  height: 100%;
+  max-height: calc(100vh - 300px);
+}
 
-  .daily-forecast {
-    background-color: #fff;       /* fond blanc */
-    border-radius: 0.85vw;          /* coins arrondis */
-    padding: 1.06vw;
-    text-align: center;
+.daily-forecast {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
 
-    h2 {
-      margin: 1.06vw 0;
-      font-size: 2.04vw;
-      color: #333;
-    }
+.daily-forecast h2 {
+  margin: 0 0 10px 0;
+  font-size: 48px;
+  color: #333;
+  font-weight: bold;
+  text-transform: capitalize;
+}
 
-    img {
-      width: 6.40vw;
-      height: 6.40vw;
-    }
+.weather-icon {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .temperature {
-      font-size: 2.39vw;
-      font-weight: bold;
-      color: #C6965B; /* par exemple, ta couleur #C6965B */
-    }
+.weather-icon img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
 
-    .description {
-      font-size: 1.70vw;
-      text-transform: capitalize; /* Pour mettre en majuscule la première lettre */
-      color: #666;
-    }
-  }
+.temperature {
+  font-size: 60px;
+  font-weight: bold;
+  color: #C6965B;
+  margin: 10px 0;
+}
 
-  .error-message {
-    color: red;
-    font-weight: bold;
-  }
+.description {
+  font-size: 36px;
+  text-transform: capitalize;
+  color: #666;
+  margin: 10px 0;
+}
+
+.error-message {
+  color: #ff3333;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
 }
