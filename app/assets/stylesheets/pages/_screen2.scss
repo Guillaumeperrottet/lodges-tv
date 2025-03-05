@@ -34,20 +34,21 @@
     }
 
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      // pour donner un “bloc” haut
-      height: 50vh; // ou autre valeur
-      padding: 0;   // si tu veux réduire l'espace
+      position: relative;
       background-color: #C6965B;
+      text-align: center;
+      padding: 30px 20px;
+      z-index: 2;
+      font-family: Poppins, sans-serif;
+      width: 100%; // Assurez-vous que le header prend toute la largeur
+
 
       h1 {
         margin: 0;
-        font-size: 10vw;     // exemple pour dimensionner en fonction de la largeur
-        letter-spacing: 1vw; // tu peux ajuster
         color: #fff;
+        font-size: 120px;
         font-weight: 900;
+        letter-spacing: 8px;
       }
     }
 
