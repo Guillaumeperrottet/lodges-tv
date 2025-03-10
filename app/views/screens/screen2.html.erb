@@ -1,17 +1,31 @@
+<!-- Slide 1 -->
+<div class="slider">
+  <div class="slide active">
+    <div class="google-slides-container">
+      <!-- Premier iframe pour le premier cycle -->
+      <iframe
+        id="google-slides-1"
+        class="active-frame"
+        src="https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=10000&rm=minimal"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        webkitallowfullscreen="true">
+      </iframe>
+      <!-- Deuxième iframe pour le cycle suivant -->
+      <iframe
+        id="google-slides-2"
+        class="inactive-frame"
+        src="about:blank"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        webkitallowfullscreen="true">
+      </iframe>
+    </div>
+  </div>
 
-  <!-- Slide 1 -->
-<div class="google-slides-container">
-  <iframe
-    src="https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=true&delayms=10000&rm=minimal"
-    frameborder="0"
-    allowfullscreen="true"
-    mozallowfullscreen="true"
-    webkitallowfullscreen="true">
-  </iframe>
-</div>
-
-
-  <%# <!-- Slide 2 - Météo -->
+  <!-- Slide 2 - Météo -->
   <div class="slide">
     <div class="background" style="background-color: #f5f5f5;"></div>
     <div class="header">
@@ -84,19 +98,56 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Gestion du défilement des slides
     const slides = document.querySelectorAll('.slider .slide');
     let currentSlideIndex = 0;
-    const slideInterval = 10000; // 10 secondes par slide
+    const regularSlideDuration = 10000;
+    const googleSlidesDuration = 50000; // 5 slides * 10 secondes
+    let slideInterval;
+    let currentFrame = 1;
+    const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=10000&rm=minimal";
+
+    function switchGoogleSlides() {
+      const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
+      const nextFrame = document.getElementById(`google-slides-${currentFrame === 1 ? 2 : 1}`);
+
+      // Préparer le prochain frame
+      nextFrame.src = googleSlidesUrl;
+
+      // Basculer les classes
+      activeFrame.classList.remove('active-frame');
+      activeFrame.classList.add('inactive-frame');
+      nextFrame.classList.remove('inactive-frame');
+      nextFrame.classList.add('active-frame');
+
+      // Mettre à jour le frame courant
+      currentFrame = currentFrame === 1 ? 2 : 1;
+
+      // Nettoyer l'ancien frame après la transition
+      setTimeout(() => {
+        activeFrame.src = 'about:blank';
+      }, 1000);
+    }
 
     function showNextSlide() {
       slides[currentSlideIndex].classList.remove('active');
       currentSlideIndex = (currentSlideIndex + 1) % slides.length;
       slides[currentSlideIndex].classList.add('active');
+
+      if (currentSlideIndex === 0) {
+        // Revenir au diaporama Google
+        clearInterval(slideInterval);
+        switchGoogleSlides();
+        setTimeout(startRegularCycle, googleSlidesDuration);
+      }
     }
 
-    // Démarrage de l'intervalle
-    setInterval(showNextSlide, slideInterval);
+    function startRegularCycle() {
+      showNextSlide(); // Passer à la météo
+      slideInterval = setInterval(showNextSlide, regularSlideDuration);
+    }
+
+    // Démarrer le premier cycle
+    setTimeout(startRegularCycle, googleSlidesDuration);
 
     // --- COMMON VARIABLES ---
     const apiKey = "9556a80b8f760d847e244de8b062a80f";
@@ -470,4 +521,4 @@
         fetchWaterTemperature();
         fetchTideData();
   });
-</script> %>
+</script>

@@ -1,3 +1,52 @@
+/* Styles pour le slider */
+.slider {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: none;
+}
+
+.slide.active {
+  opacity: 1;
+  display: block;
+}
+
+.google-slides-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .active-frame {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  .inactive-frame {
+    opacity: 0;
+    z-index: 1;
+  }
+}
+
 /* Styles pour les slides météo et conditions nautiques */
 .header {
   position: relative;
