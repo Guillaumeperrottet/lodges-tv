@@ -1,6 +1,7 @@
 .slider {
   position: relative;
   height: 100vh;
+  width: 100vw;
   overflow: hidden;
 
   .slide {
@@ -30,13 +31,13 @@
 
   .slides-container {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     background: #fff;
     overflow: hidden;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: stretch;
 
     iframe {
       position: absolute;
