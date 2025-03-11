@@ -2,6 +2,11 @@
 <div class="slider">
   <div class="slide active">
     <div class="google-slides-container">
+      <div class="slides-loader">
+        <div class="loader">
+          <div class="loader-inner"></div>
+        </div>
+      </div>
       <!-- Premier iframe pour le premier cycle -->
       <iframe
         id="google-slides-1"
@@ -10,7 +15,8 @@
         frameborder="0"
         allowfullscreen="true"
         mozallowfullscreen="true"
-        webkitallowfullscreen="true">
+        webkitallowfullscreen="true"
+        onload="this.parentElement.classList.remove('loading')">
       </iframe>
       <!-- Deuxième iframe pour le cycle suivant -->
       <iframe
@@ -20,7 +26,8 @@
         frameborder="0"
         allowfullscreen="true"
         mozallowfullscreen="true"
-        webkitallowfullscreen="true">
+        webkitallowfullscreen="true"
+        onload="this.parentElement.classList.remove('loading')">
       </iframe>
     </div>
   </div>
@@ -33,7 +40,9 @@
     </div>
     <div class="content weather">
       <div id="weather-container">
-        <p>Chargement de la météo...</p>
+        <div class="loader">
+          <div class="loader-inner"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -109,6 +118,10 @@
     function switchGoogleSlides() {
       const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
       const nextFrame = document.getElementById(`google-slides-${currentFrame === 1 ? 2 : 1}`);
+      const container = activeFrame.parentElement;
+
+      // Activer le loader
+      container.classList.add('loading');
 
       // Préparer le prochain frame
       nextFrame.src = googleSlidesUrl;
@@ -158,6 +171,9 @@
     // --- METEO (One Call API 3.0) ---
     const weatherContainer = document.getElementById("weather-container");
 
+    // Ajouter la classe loading au début
+    weatherContainer.classList.add('loading');
+
     fetch(apiUrl)
       .then(response => {
         if (!response.ok) {
@@ -166,7 +182,7 @@
         return response.json();
       })
       .then(data => {
-        console.log("Données marines reçues :", data); // <-- Ajout de log pour vérifier les données reçues
+        console.log("Données marines reçues :", data);
         if (!data.daily || data.daily.length < 4) {
           throw new Error("Données météo incomplètes");
         }
@@ -199,10 +215,14 @@
         });
 
         forecastHtml += `</div>`;
+
+        // Retirer la classe loading et injecter le contenu
+        weatherContainer.classList.remove('loading');
         weatherContainer.innerHTML = forecastHtml;
       })
       .catch(error => {
         console.error("Erreur lors de la récupération de la météo :", error);
+        weatherContainer.classList.remove('loading');
         weatherContainer.innerHTML = "<p class='error-message'>Impossible de récupérer la météo pour le moment.</p>";
       });
 
