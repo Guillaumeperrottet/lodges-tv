@@ -124,7 +124,6 @@
 .content.weather {
   position: relative;
   z-index: 2;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,7 +132,7 @@
 }
 
 #weather-container {
-  width: 80%;
+  width: 90%;
   height: 100%;
   padding: 10px 30px;
   color: #333;
@@ -142,7 +141,6 @@
 .forecast-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
   gap: 10px;
   height: 70%;
   max-height: calc(100vh - 280px);
