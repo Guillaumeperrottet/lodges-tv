@@ -1,4 +1,4 @@
-<%# <!-- Slide 1 -->
+<!-- Slide 1 -->
 <div class="slider">
   <div class="slide active">
     <div class="google-slides-container">
@@ -30,14 +30,14 @@
         onload="this.parentElement.classList.remove('loading')">
       </iframe>
     </div>
-  </div> %>
+  </div>
 
   <!-- Slide 2 - Météo -->
-  <div class="slide active">
+  <div class="slide">
     <div class="background-image" style="background-image: url('https://res.cloudinary.com/dafkgjhwt/image/upload/v1741704836/chuttersnap-olqdyg9Bxg4-unsplash_qepzjz.jpg');"></div>
     <div class="header transparent">
       <h1>POINT MÉTÉO</h1>
-      <h2>Quel temps fait-il aujourd'hui ?</h2>
+      <h2>Quel temps fait-il ?</h2>
     </div>
     <div class="content weather">
       <div id="weather-container">
@@ -50,9 +50,10 @@
 
   <!-- Slide 3 - Conditions Nautiques -->
   <div class="slide">
-    <div class="background" style="background-color: #f5f5f5;"></div>
-    <div class="header">
-      <h1>Conditions Nautiques</h1>
+ <div class="background-image" style="background-image: url('https://res.cloudinary.com/dafkgjhwt/image/upload/v1741707717/mer_euf77x.jpg');"></div>
+    <div class="header transparent">
+      <h1>POINT NAUTIQUE</h1>
+      <h2>Quelles sont les conditions ?</h2>
     </div>
     <div class="content weather-conditions">
       <div id="marine-container">
@@ -274,10 +275,8 @@
               return date.getHours() + 'h';
             });
 
-            // Convert wind speeds from m/s to knots (multiply by 1.94)
-            const windSpeeds = hourlyData.map(hour => Math.round(hour.wind_speed * 1.94));
+            const windSpeeds = hourlyData.map(hour => Math.round(hour.wind_speed * 1.94 * 10) / 10); // Précision à 0.1 près
 
-            // Create wind chart with knots units
             const ctx = document.getElementById('windChart').getContext('2d');
             const windChart = new Chart(ctx, {
               type: 'line',
@@ -307,17 +306,25 @@
                 },
                 scales: {
                   y: {
-                    beginAtZero: true,
+                    beginAtZero: false, // Ne commence pas à zéro pour plus de précision
                     grid: {
                       color: 'rgba(0, 0, 0, 0.1)',
                     },
                     ticks: {
+                      stepSize: 2, // Incréments de 2 kts
                       font: {
                         size: 14
                       },
                       callback: function(value) {
-                        return value + ' kts'; // Add units to the y-axis labels
+                        return value + ' kts';
                       }
+                    },
+                    afterDataLimits: (scale) => {
+                      // Ajuste les limites pour avoir une marge de 2 kts au-dessus et en-dessous
+                      const minValue = Math.floor(Math.min(...windSpeeds) - 2);
+                      const maxValue = Math.ceil(Math.max(...windSpeeds) + 2);
+                      scale.min = Math.max(0, minValue); // Ne descend pas en dessous de 0
+                      scale.max = maxValue;
                     }
                   },
                   x: {
@@ -329,7 +336,7 @@
                         size: 14
                       },
                       maxRotation: 0,
-                      maxTicksLimit: 8 // Limit the number of ticks to avoid overcrowding
+                      maxTicksLimit: 8 // Limite le nombre d'heures affichées pour plus de clarté
                     }
                   }
                 },
@@ -340,7 +347,7 @@
                   tooltip: {
                     callbacks: {
                       label: function(context) {
-                        return context.parsed.y + ' kts'; // Add units to tooltip
+                        return context.parsed.y.toFixed(1) + ' kts'; // Affiche une décimale dans le tooltip
                       }
                     }
                   }
