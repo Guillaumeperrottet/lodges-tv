@@ -29,6 +29,17 @@
         webkitallowfullscreen="true"
         onload="this.parentElement.classList.remove('loading')">
       </iframe>
+
+      <!-- Ajoutez cet iframe caché dans votre HTML -->
+      <iframe
+        id="google-slides-preload"
+        class="hidden-frame"
+        src="about:blank"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        webkitallowfullscreen="true">
+      </iframe>
     </div>
   </div>
 
@@ -153,6 +164,9 @@
         clearInterval(slideInterval);
         switchGoogleSlides();
         setTimeout(startRegularCycle, googleSlidesDuration);
+      } else {
+        // Précharger Google Slides lorsque la dernière diapositive est affichée
+        preloadFrame.src = googleSlidesUrl;
       }
     }
 

@@ -85,7 +85,12 @@
     opacity: 0;
     z-index: 1;
   }
+
+  .hidden-frame {
+    display: none;
+  }
 }
+
 
 /* Styles pour les slides météo et conditions nautiques */
 .header {
