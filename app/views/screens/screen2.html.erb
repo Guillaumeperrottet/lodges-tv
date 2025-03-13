@@ -11,7 +11,7 @@
       <iframe
         id="google-slides-1"
         class="active-frame"
-        src="https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=true&delayms=15000&rm=minimal"
+        src="https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=15000&rm=minimal"
         frameborder="0"
         allowfullscreen="true"
         mozallowfullscreen="true"
@@ -185,8 +185,11 @@
         // Transition entre les frames
         container.classList.add('loading');
 
+        // Forcer le rechargement de l'iframe
         if (nextFrame.src === 'about:blank') {
           nextFrame.src = googleSlidesUrl;
+        } else {
+          nextFrame.src = nextFrame.src; // Force reload
         }
 
         // Gestion de l'événement onload pour terminer la transition
@@ -197,9 +200,9 @@
           nextFrame.classList.add('active-frame');
           container.classList.remove('loading');
           currentFrame = currentFrame === 1 ? 2 : 1;
-          lastTransitionTime = Date.now(); // Mettre à jour le timestamp de dernière transition
+          lastTransitionTime = Date.now();
 
-          // Précharger la prochaine itération une fois la transition terminée
+          // Précharger la prochaine itération
           setTimeout(() => {
             activeFrame.src = 'about:blank';
             if (preloadFrame) {
