@@ -315,10 +315,21 @@
 }
 
 /* Water Temperature Panel */
-.temp-icon {
-  font-size: 100px;
-  color: #4682B4;
-  margin: 20px 0;
+.temp-icon, .water-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+
+  svg {
+    width: 48px;
+    height: 48px;
+
+    path {
+      stroke: #C6965B;
+      stroke-width: 1;
+    }
+  }
 }
 
 .water-icon:before {
@@ -407,8 +418,20 @@
 }
 
 .sun-icon {
-  font-size: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 15px 0;
+
+  svg {
+    width: 48px;
+    height: 48px;
+
+    path {
+      stroke: #C6965B;
+      stroke-width: 1.5;
+    }
+  }
 }
 
 .sun-time {
@@ -420,6 +443,16 @@
 @keyframes spin {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Animation pour l'icône d'eau */
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.water-icon svg {
+  animation: wave 2s ease-in-out infinite;
 }
 
 /* Ajout d'une classe pour gérer l'état de chargement */
