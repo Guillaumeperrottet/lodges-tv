@@ -112,10 +112,10 @@
     const slides = document.querySelectorAll('.slider .slide');
     let currentSlideIndex = 0;
     const regularSlideDuration = 15000;
-    const googleSlidesDuration = 120000; // 5 slides * 10 secondes
+    const googleSlidesDuration = 120000; // 8 slides * 15 secondes
     let slideInterval;
     let currentFrame = 1;
-    const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=10000&rm=minimal";
+    const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=true&delayms=15000&rm=minimal";
 
     function switchGoogleSlides() {
       const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
