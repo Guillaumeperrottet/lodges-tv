@@ -128,118 +128,77 @@
     let currentFrame = 1;
     const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=10000&rm=minimal";
 
-    // Obtenir une référence explicite à l'iframe de préchargement
+    // Uniquement précharger le Google Slides
     const preloadFrame = document.getElementById('google-slides-preload');
-
-    // Précharger les Google Slides dès le début
     if (preloadFrame) {
       preloadFrame.src = googleSlidesUrl;
     }
 
+
     function switchGoogleSlides() {
-      const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
-      const nextFrame = document.getElementById(`google-slides-${currentFrame === 1 ? 2 : 1}`);
-      const container = activeFrame.parentElement;
+        const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
+        const nextFrame = document.getElementById(`google-slides-${currentFrame === 1 ? 2 : 1}`);
+        const container = activeFrame.parentElement;
 
-      // Vérifier que l'iframe suivant est prêt avant de faire la transition
-      // Si le nextFrame n'a pas encore de source, utiliser l'iframe préchargé
-      if (nextFrame.src === 'about:blank' && preloadFrame && preloadFrame.src !== 'about:blank') {
-        nextFrame.src = googleSlidesUrl;
+        // Transition entre les frames
+        container.classList.add('loading');
 
-        // Attendre un court instant pour s'assurer que le contenu commence à charger
-        setTimeout(() => {
-          performTransition(activeFrame, nextFrame, container);
-        }, 100);
-      } else {
-        // Si l'iframe suivant a déjà une source, faire la transition immédiatement
-        performTransition(activeFrame, nextFrame, container);
-      }
-    }
-
-    function performTransition(activeFrame, nextFrame, container) {
-      // Activer le loader
-      container.classList.add('loading');
-
-      // Garder l'iframe active visible jusqu'à ce que le suivant soit chargé
-      nextFrame.onload = function() {
-        // Une fois que le prochain frame est chargé, faire la transition
-        activeFrame.classList.remove('active-frame');
-        activeFrame.classList.add('inactive-frame');
-        nextFrame.classList.remove('inactive-frame');
-        nextFrame.classList.add('active-frame');
-
-        // Retirer le loader une fois la transition effectuée
-        container.classList.remove('loading');
-
-        // Mettre à jour le frame courant
-        currentFrame = currentFrame === 1 ? 2 : 1;
-
-        // Nettoyer l'ancien frame après la transition
-        setTimeout(() => {
-          activeFrame.src = 'about:blank';
-        }, 1000);
-
-        // Précharger la prochaine itération
-        if (preloadFrame) {
-          preloadFrame.src = googleSlidesUrl;
+        if (nextFrame.src === 'about:blank') {
+          nextFrame.src = googleSlidesUrl;
         }
-      };
 
-      // Ajouter un gestionnaire d'erreur au cas où le chargement échoue
-      nextFrame.onerror = function() {
-        console.error("Erreur lors du chargement de l'iframe Google Slides");
-        container.classList.remove('loading');
-        // Continuer quand même avec la transition
-        activeFrame.classList.remove('active-frame');
-        activeFrame.classList.add('inactive-frame');
-        nextFrame.classList.remove('inactive-frame');
-        nextFrame.classList.add('active-frame');
-        currentFrame = currentFrame === 1 ? 2 : 1;
-      };
+        // Gestion de l'événement onload pour terminer la transition
+        nextFrame.onload = function() {
+          activeFrame.classList.remove('active-frame');
+          activeFrame.classList.add('inactive-frame');
+          nextFrame.classList.remove('inactive-frame');
+          nextFrame.classList.add('active-frame');
+          container.classList.remove('loading');
+          currentFrame = currentFrame === 1 ? 2 : 1;
 
-      // S'assurer que la source est définie (peut déjà être définie)
-      if (nextFrame.src === 'about:blank') {
-        nextFrame.src = googleSlidesUrl;
+          // Précharger la prochaine itération une fois la transition terminée
+          setTimeout(() => {
+            activeFrame.src = 'about:blank';
+            if (preloadFrame) {
+              preloadFrame.src = googleSlidesUrl;
+            }
+          }, 1000);
+        };
+
+        // Gestion des erreurs
+        nextFrame.onerror = function() {
+          console.error("Erreur lors du chargement de l'iframe Google Slides");
+          container.classList.remove('loading');
+          // Continuer quand même avec la transition
+          activeFrame.classList.remove('active-frame');
+          activeFrame.classList.add('inactive-frame');
+          nextFrame.classList.remove('inactive-frame');
+          nextFrame.classList.add('active-frame');
+          currentFrame = currentFrame === 1 ? 2 : 1;
+        };
       }
-    }
 
     function showNextSlide() {
-      // Ne pas cacher la diapositive actuelle avant que la suivante ne soit prête
-      // à être affichée (évite l'écran blanc)
       const nextSlideIndex = (currentSlideIndex + 1) % slides.length;
 
       // Si on revient au début (Google Slides)
       if (nextSlideIndex === 0) {
-        // S'assurer que l'iframe Google Slides est prêt avant de faire la transition
-        const nextFrame = document.getElementById(`google-slides-${currentFrame === 1 ? 2 : 1}`);
-        if (nextFrame.src === 'about:blank') {
-          nextFrame.src = googleSlidesUrl;
+        // Transition vers les Google Slides
+        clearInterval(slideInterval);
+        slides[currentSlideIndex].classList.remove('active');
+        currentSlideIndex = nextSlideIndex;
+        slides[currentSlideIndex].classList.add('active');
+        switchGoogleSlides();
 
-          // Attendre que l'iframe commence à charger avant de faire la transition
-          setTimeout(() => {
-            clearInterval(slideInterval);
-            slides[currentSlideIndex].classList.remove('active');
-            currentSlideIndex = nextSlideIndex;
-            slides[currentSlideIndex].classList.add('active');
-            switchGoogleSlides();
-            setTimeout(startRegularCycle, googleSlidesDuration);
-          }, 200);
-        } else {
-          // Si l'iframe est déjà chargé, faire la transition immédiatement
-          clearInterval(slideInterval);
-          slides[currentSlideIndex].classList.remove('active');
-          currentSlideIndex = nextSlideIndex;
-          slides[currentSlideIndex].classList.add('active');
-          switchGoogleSlides();
-          setTimeout(startRegularCycle, googleSlidesDuration);
-        }
+        // Programmer le passage à la diapositive suivante après la durée des Google Slides
+        setTimeout(startRegularCycle, googleSlidesDuration);
       } else {
-        // Pour les autres diapositives, transition normale
+        // Pour les autres diapositives, transition simple
         slides[currentSlideIndex].classList.remove('active');
         currentSlideIndex = nextSlideIndex;
         slides[currentSlideIndex].classList.add('active');
 
-        // Si on arrive à la dernière diapositive, précharger Google Slides
+        // À la dernière diapositive, précharger Google Slides pour le prochain cycle
         if (currentSlideIndex === slides.length - 1 && preloadFrame) {
           preloadFrame.src = googleSlidesUrl;
         }
