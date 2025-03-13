@@ -126,14 +126,56 @@
     const googleSlidesDuration = 120000;
     let slideInterval;
     let currentFrame = 1;
+    let lastTransitionTime = Date.now();
+    const MAX_STALL_TIME = 30000; // 30 secondes maximum sans transition
     const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=15000&rm=minimal";
+
+    // Fonction de vérification d'état
+    function checkSystemHealth() {
+      const now = Date.now();
+      if (now - lastTransitionTime > MAX_STALL_TIME) {
+        console.log("Système bloqué détecté, redémarrage...");
+        restartSystem();
+      }
+    }
+
+    // Fonction de redémarrage
+    function restartSystem() {
+      // Arrêter tous les intervalles
+      clearInterval(slideInterval);
+      clearInterval(healthCheckInterval);
+
+      // Réinitialiser les iframes
+      const iframes = document.querySelectorAll('iframe');
+      iframes.forEach(iframe => {
+        iframe.src = iframe.src;
+      });
+
+      // Réinitialiser les variables
+      currentSlideIndex = 0;
+      currentFrame = 1;
+      lastTransitionTime = Date.now();
+
+      // Redémarrer le système
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[0].classList.add('active');
+
+      // Redémarrer les intervalles
+      setTimeout(() => {
+        setTimeout(startRegularCycle, googleSlidesDuration);
+      }, 500);
+
+      healthCheckInterval = setInterval(checkSystemHealth, 5000);
+    }
+
+    // Démarrer la vérification d'état
+    let healthCheckInterval = setInterval(checkSystemHealth, 5000);
 
     // Uniquement précharger le Google Slides
     const preloadFrame = document.getElementById('google-slides-preload');
     if (preloadFrame) {
       preloadFrame.src = googleSlidesUrl;
     }
-
 
     function switchGoogleSlides() {
         const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
@@ -155,6 +197,7 @@
           nextFrame.classList.add('active-frame');
           container.classList.remove('loading');
           currentFrame = currentFrame === 1 ? 2 : 1;
+          lastTransitionTime = Date.now(); // Mettre à jour le timestamp de dernière transition
 
           // Précharger la prochaine itération une fois la transition terminée
           setTimeout(() => {
@@ -165,52 +208,41 @@
           }, 1000);
         };
 
-        // Gestion des erreurs
+        // Gestion des erreurs avec redémarrage
         nextFrame.onerror = function() {
           console.error("Erreur lors du chargement de l'iframe Google Slides");
           container.classList.remove('loading');
-          // Continuer quand même avec la transition
-          activeFrame.classList.remove('active-frame');
-          activeFrame.classList.add('inactive-frame');
-          nextFrame.classList.remove('inactive-frame');
-          nextFrame.classList.add('active-frame');
-          currentFrame = currentFrame === 1 ? 2 : 1;
+          restartSystem();
         };
-      }
+    }
 
     function showNextSlide() {
       const nextSlideIndex = (currentSlideIndex + 1) % slides.length;
+      lastTransitionTime = Date.now(); // Mettre à jour le timestamp de dernière transition
 
       // Si on revient au début (Google Slides)
       if (nextSlideIndex === 0) {
-        // Transition vers les Google Slides
         clearInterval(slideInterval);
         slides[currentSlideIndex].classList.remove('active');
         currentSlideIndex = nextSlideIndex;
         slides[currentSlideIndex].classList.add('active');
         switchGoogleSlides();
-
-        // Programmer le passage à la diapositive suivante après la durée des Google Slides
         setTimeout(startRegularCycle, googleSlidesDuration);
       } else {
-        // Pour les autres diapositives, transition simple
         slides[currentSlideIndex].classList.remove('active');
         currentSlideIndex = nextSlideIndex;
         slides[currentSlideIndex].classList.add('active');
 
-        // À la dernière diapositive, précharger Google Slides pour le prochain cycle
         if (currentSlideIndex === slides.length - 1 && preloadFrame) {
           preloadFrame.src = googleSlidesUrl;
         }
       }
     }
 
-
     function startRegularCycle() {
       showNextSlide(); // Passer à la météo
       slideInterval = setInterval(showNextSlide, regularSlideDuration);
     }
-
 
     // Démarrer le premier cycle après un court délai pour permettre au premier iframe de se charger
     setTimeout(() => {
