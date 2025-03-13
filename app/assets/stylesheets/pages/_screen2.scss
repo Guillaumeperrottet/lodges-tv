@@ -383,7 +383,39 @@
   color: #666;
 }
 
+/* Sun Panel Styles */
+.sun-info {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 20px;
+}
 
+.sunrise, .sunset {
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+
+  p {
+    margin: 10px 0;
+
+    &:first-child {
+      font-size: 32px;
+      font-weight: bold;
+    }
+  }
+}
+
+.sun-icon {
+  font-size: 48px;
+  margin: 15px 0;
+}
+
+.sun-time {
+  font-size: 42px;
+  font-weight: bold;
+  color: #C6965B;
+}
 
 @keyframes spin {
   0% { transform: translate(-50%, -50%) rotate(0deg); }

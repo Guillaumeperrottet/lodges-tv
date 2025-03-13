@@ -84,19 +84,19 @@
             <canvas id="windChart"></canvas>
           </div>
 
-          <!-- Tide Information -->
-          <div class="marine-panel tide-panel">
-            <h2>Marées</h2>
-            <div class="tide-info">
-              <div class="tide-high">
-                <p>Marée Haute</p>
-                <p class="tide-time">--:--</p>
-                <p class="tide-height">-- m</p>
+          <!-- Sun Panel -->
+          <div class="marine-panel sun-panel">
+            <h2>Soleil</h2>
+            <div class="sun-info">
+              <div class="sunrise">
+                <p>Lever</p>
+                <div class="sun-icon">🌅</div>
+                <p class="sun-time">--:--</p>
               </div>
-              <div class="tide-low">
-                <p>Marée Basse</p>
-                <p class="tide-time">--:--</p>
-                <p class="tide-height">-- m</p>
+              <div class="sunset">
+                <p>Coucher</p>
+                <div class="sun-icon">🌇</div>
+                <p class="sun-time">--:--</p>
               </div>
             </div>
           </div>
@@ -221,6 +221,26 @@
         // Retirer la classe loading et injecter le contenu
         weatherContainer.classList.remove('loading');
         weatherContainer.innerHTML = forecastHtml;
+
+        // Ajout du traitement des données solaires
+        if (data.current) {
+          const sunrise = new Date(data.current.sunrise * 1000);
+          const sunset = new Date(data.current.sunset * 1000);
+
+          // Formatage des heures
+          const formatTime = (date) => {
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+          };
+
+          // Mise à jour des éléments
+          const sunriseElement = document.querySelector('.sunrise .sun-time');
+          const sunsetElement = document.querySelector('.sunset .sun-time');
+
+          if (sunriseElement && sunsetElement) {
+            sunriseElement.textContent = formatTime(sunrise);
+            sunsetElement.textContent = formatTime(sunset);
+          }
+        }
       })
       .catch(error => {
         console.error("Erreur lors de la récupération de la météo :", error);
