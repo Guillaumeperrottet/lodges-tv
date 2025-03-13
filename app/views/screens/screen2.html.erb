@@ -127,45 +127,81 @@
     let slideInterval;
     let currentFrame = 1;
     let lastTransitionTime = Date.now();
-    const MAX_STALL_TIME = 30000; // 30 secondes maximum sans transition
+    const MAX_STALL_TIME = 150000; // Augmenté à 150 secondes pour donner plus de temps aux Google Slides
     const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=false&delayms=15000&rm=minimal";
 
     // Fonction de vérification d'état
     function checkSystemHealth() {
       const now = Date.now();
-      if (now - lastTransitionTime > MAX_STALL_TIME) {
-        console.log("Système bloqué détecté, redémarrage...");
-        restartSystem();
+      const timeSinceLastTransition = now - lastTransitionTime;
+
+      if (timeSinceLastTransition > MAX_STALL_TIME) {
+        console.log(`Système potentiellement bloqué (${Math.round(timeSinceLastTransition/1000)}s sans transition)`);
+
+        // Vérifier si nous sommes sur les Google Slides
+        if (currentSlideIndex === 0) {
+          // Donner plus de temps aux Google Slides avant de redémarrer
+          if (timeSinceLastTransition > MAX_STALL_TIME * 1.5) {
+            console.log("Redémarrage forcé du système");
+            restartSystem();
+          }
+        } else {
+          // Pour les autres slides, redémarrer plus rapidement
+          restartSystem();
+        }
       }
     }
 
     // Fonction de redémarrage
     function restartSystem() {
-      // Arrêter tous les intervalles
-      clearInterval(slideInterval);
-      clearInterval(healthCheckInterval);
+        console.log("Redémarrage du système...");
 
-      // Réinitialiser les iframes
-      const iframes = document.querySelectorAll('iframe');
-      iframes.forEach(iframe => {
-        iframe.src = iframe.src;
-      });
+        // Arrêter tous les intervalles
+        clearInterval(slideInterval);
+        clearInterval(healthCheckInterval);
 
-      // Réinitialiser les variables
-      currentSlideIndex = 0;
-      currentFrame = 1;
-      lastTransitionTime = Date.now();
+        try {
+            // Réinitialiser les iframes avec un court délai entre chaque
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach((iframe, index) => {
+                setTimeout(() => {
+                    try {
+                        iframe.src = 'about:blank';
+                        if (index === 0) {
+                            setTimeout(() => {
+                                // Ajouter un timestamp pour éviter le cache
+                                iframe.src = `${googleSlidesUrl}&t=${Date.now()}`;
+                            }, 500);
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors de la réinitialisation de l'iframe:", e);
+                    }
+                }, index * 100);
+            });
 
-      // Redémarrer le système
-      slides.forEach(slide => slide.classList.remove('active'));
-      slides[0].classList.add('active');
+            // Réinitialiser les variables
+            currentSlideIndex = 0;
+            currentFrame = 1;
+            lastTransitionTime = Date.now();
 
-      // Redémarrer les intervalles
-      setTimeout(() => {
-        setTimeout(startRegularCycle, googleSlidesDuration);
-      }, 500);
+            // Redémarrer le système
+            const slides = document.querySelectorAll('.slider .slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[0].classList.add('active');
 
-      healthCheckInterval = setInterval(checkSystemHealth, 5000);
+            // Redémarrer les intervalles avec un délai
+            setTimeout(() => {
+                setTimeout(startRegularCycle, googleSlidesDuration);
+                healthCheckInterval = setInterval(checkSystemHealth, 5000);
+            }, 1000);
+
+        } catch (e) {
+            console.error("Erreur critique lors du redémarrage:", e);
+            // Recharger la page en dernier recours
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        }
     }
 
     // Démarrer la vérification d'état
@@ -182,64 +218,89 @@
         const nextFrame = document.getElementById(`google-slides-${currentFrame === 1 ? 2 : 1}`);
         const container = activeFrame.parentElement;
 
-        // Transition entre les frames
-        container.classList.add('loading');
+        // Ajouter un timeout de sécurité plus long
+        const loadTimeout = setTimeout(() => {
+            console.log("Timeout de chargement - forçage de la transition");
+            finishTransition();
+        }, 20000); // 20 secondes de timeout
 
-        // Forcer le rechargement de l'iframe
-        if (nextFrame.src === 'about:blank') {
-          nextFrame.src = googleSlidesUrl;
-        } else {
-          nextFrame.src = nextFrame.src; // Force reload
+        function finishTransition() {
+            clearTimeout(loadTimeout);
+
+            try {
+                activeFrame.classList.remove('active-frame');
+                activeFrame.classList.add('inactive-frame');
+                nextFrame.classList.remove('inactive-frame');
+                nextFrame.classList.add('active-frame');
+                container.classList.remove('loading');
+                currentFrame = currentFrame === 1 ? 2 : 1;
+                lastTransitionTime = Date.now();
+
+                // Nettoyer l'iframe inactive après un délai plus long
+                setTimeout(() => {
+                    try {
+                        activeFrame.src = 'about:blank';
+                        if (preloadFrame) {
+                            preloadFrame.src = `${googleSlidesUrl}&t=${Date.now()}`;
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors du nettoyage des iframes:", e);
+                    }
+                }, 2000);
+            } catch (e) {
+                console.error("Erreur lors de la transition:", e);
+            }
         }
 
-        // Gestion de l'événement onload pour terminer la transition
-        nextFrame.onload = function() {
-          activeFrame.classList.remove('active-frame');
-          activeFrame.classList.add('inactive-frame');
-          nextFrame.classList.remove('inactive-frame');
-          nextFrame.classList.add('active-frame');
-          container.classList.remove('loading');
-          currentFrame = currentFrame === 1 ? 2 : 1;
-          lastTransitionTime = Date.now();
+        try {
+            container.classList.add('loading');
+            lastTransitionTime = Date.now(); // Mettre à jour le timestamp ici aussi
 
-          // Précharger la prochaine itération
-          setTimeout(() => {
-            activeFrame.src = 'about:blank';
-            if (preloadFrame) {
-              preloadFrame.src = googleSlidesUrl;
-            }
-          }, 1000);
-        };
+            // Ajouter un timestamp pour éviter le cache
+            const urlWithTimestamp = `${googleSlidesUrl}&t=${Date.now()}`;
+            nextFrame.src = urlWithTimestamp;
 
-        // Gestion des erreurs avec redémarrage
-        nextFrame.onerror = function() {
-          console.error("Erreur lors du chargement de l'iframe Google Slides");
-          container.classList.remove('loading');
-          restartSystem();
-        };
+            // Gestion de l'événement onload
+            nextFrame.onload = function() {
+                clearTimeout(loadTimeout);
+                finishTransition();
+            };
+
+        } catch (e) {
+            console.error("Erreur dans switchGoogleSlides:", e);
+            clearTimeout(loadTimeout);
+        }
     }
 
     function showNextSlide() {
-      const nextSlideIndex = (currentSlideIndex + 1) % slides.length;
-      lastTransitionTime = Date.now(); // Mettre à jour le timestamp de dernière transition
+        try {
+            const nextSlideIndex = (currentSlideIndex + 1) % slides.length;
+            lastTransitionTime = Date.now();
 
-      // Si on revient au début (Google Slides)
-      if (nextSlideIndex === 0) {
-        clearInterval(slideInterval);
-        slides[currentSlideIndex].classList.remove('active');
-        currentSlideIndex = nextSlideIndex;
-        slides[currentSlideIndex].classList.add('active');
-        switchGoogleSlides();
-        setTimeout(startRegularCycle, googleSlidesDuration);
-      } else {
-        slides[currentSlideIndex].classList.remove('active');
-        currentSlideIndex = nextSlideIndex;
-        slides[currentSlideIndex].classList.add('active');
+            // Si on revient au début (Google Slides)
+            if (nextSlideIndex === 0) {
+                clearInterval(slideInterval);
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = nextSlideIndex;
+                slides[currentSlideIndex].classList.add('active');
+                switchGoogleSlides();
+                // Augmenter le délai avant de démarrer le cycle régulier
+                setTimeout(startRegularCycle, googleSlidesDuration + 5000);
+            } else {
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = nextSlideIndex;
+                slides[currentSlideIndex].classList.add('active');
 
-        if (currentSlideIndex === slides.length - 1 && preloadFrame) {
-          preloadFrame.src = googleSlidesUrl;
+                // Précharger Google Slides à l'avance
+                if (currentSlideIndex === slides.length - 1 && preloadFrame) {
+                    setTimeout(() => {
+                        preloadFrame.src = `${googleSlidesUrl}&t=${Date.now()}`;
+                    }, 5000);
+                }
+            }
+        } catch (e) {
+            console.error("Erreur dans showNextSlide:", e);
         }
-      }
     }
 
     function startRegularCycle() {
@@ -249,8 +310,8 @@
 
     // Démarrer le premier cycle après un court délai pour permettre au premier iframe de se charger
     setTimeout(() => {
-      setTimeout(startRegularCycle, googleSlidesDuration);
-    }, 500);
+      setTimeout(startRegularCycle, googleSlidesDuration + 2000);
+    }, 1000);
 
     // --- COMMON VARIABLES ---
     const apiKey = "9556a80b8f760d847e244de8b062a80f";
