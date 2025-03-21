@@ -190,72 +190,37 @@
 
     // --- SYSTÈME DE CACHE ET DE MISE À JOUR À HEURES FIXES ---
 
-    // Fonction pour vérifier si nous devons mettre à jour les données
-    function shouldUpdateData() {
-      // Vérifie si c'est une heure de mise à jour programmée
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-
-      // Si nous sommes dans la première minute d'une heure de mise à jour programmée,
-      // ou si le cache est invalide, mettre à jour les données
-      return (UPDATE_HOURS.includes(currentHour) && currentMinute < 1) || !isCacheValid();
-    }
-
-    // Fonction pour vérifier si le cache est valide
-    function isCacheValid() {
-      const weatherCacheTime = localStorage.getItem(CACHE_KEYS.WEATHER_TIME);
-      if (!weatherCacheTime) return false;
-
-      const cacheDate = new Date(weatherCacheTime);
-      const now = new Date();
-      const hoursDiff = (now - cacheDate) / (1000 * 60 * 60); // Convert ms to hours
-
-      return hoursDiff < CACHE_DURATION_HOURS;
-    }
-
-    // Fonction pour planifier la prochaine vérification de mise à jour
-    function scheduleNextUpdate() {
+    // Fonction pour recharger la page aux heures de mise à jour
+    function schedulePageRefresh() {
       const now = new Date();
       let nextUpdateTime;
 
       // Trouver la prochaine heure de mise à jour
       let foundNextHour = false;
 
-      // Chercher dans les heures restantes d'aujourd'hui
       for (const hour of UPDATE_HOURS) {
-        if (hour > now.getHours() || (hour === now.getHours() && now.getMinutes() < 1)) {
+        if (hour > now.getHours()) {
           nextUpdateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, 0, 0);
           foundNextHour = true;
           break;
         }
       }
 
-      // Si aucune heure ne reste aujourd'hui, prendre la première heure de demain
+      // Si aucune heure restante aujourd'hui, planifier pour demain
       if (!foundNextHour && UPDATE_HOURS.length > 0) {
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
         nextUpdateTime = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), UPDATE_HOURS[0], 0, 0);
       }
 
-      // Calculer le délai avant la prochaine mise à jour
+      // Calculer le délai avant le prochain rechargement
       const delay = nextUpdateTime - now;
 
-      // Programmer la prochaine vérification
-      console.log(`Prochaine vérification de mise à jour programmée à ${nextUpdateTime.toLocaleTimeString()}`);
-      setTimeout(checkForUpdates, delay);
-    }
-
-    // Fonction pour vérifier et effectuer les mises à jour
-    function checkForUpdates() {
-      if (shouldUpdateData()) {
-        console.log("Mise à jour des données météo et marines...");
-        fetchWeatherData();
-        fetchWaterTemperature();
-      }
-
-      // Planifier la prochaine vérification
-      scheduleNextUpdate();
+      console.log(`Prochain rechargement de page programmé à ${nextUpdateTime.toLocaleTimeString()}`);
+      setTimeout(() => {
+        console.log("Rechargement de la page pour mise à jour météo...");
+        location.reload();
+      }, delay);
     }
 
     // --- METEO (One Call API 3.0) ---
@@ -498,10 +463,16 @@
         return;
       }
 
-      // Si nous ne devons pas mettre à jour les données, utiliser le cache
-      if (!shouldUpdateData()) {
-        const cachedData = localStorage.getItem(CACHE_KEYS.WATER_TEMP);
-        if (cachedData) {
+      // Si le cache existe et est récent (moins de 6 heures), l'utiliser
+      const waterTempCacheTime = localStorage.getItem(CACHE_KEYS.WATER_TEMP_TIME);
+      const cachedData = localStorage.getItem(CACHE_KEYS.WATER_TEMP);
+
+      if (waterTempCacheTime && cachedData) {
+        const cacheDate = new Date(waterTempCacheTime);
+        const now = new Date();
+        const hoursDiff = (now - cacheDate) / (1000 * 60 * 60);
+
+        if (hoursDiff < CACHE_DURATION_HOURS) {
           console.log("Utilisation des données en cache pour la température de l'eau");
           processWaterTempData(JSON.parse(cachedData));
           return;
@@ -597,7 +568,8 @@
     // Charger les données marines depuis le cache ou les récupérer
     fetchWaterTemperature();
 
-    // Démarrer le cycle de vérification de mise à jour
-    checkForUpdates();
+    // Programme un rechargement de page aux heures spécifiées
+    // au lieu d'utiliser une boucle de vérification continuelle
+    schedulePageRefresh();
   });
 </script>
