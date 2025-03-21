@@ -73,6 +73,11 @@ const LON = 4.9;  // Remplacez par votre longitude
 
 ## 🖥️ Utilisation
 
+*screen1.html.erb
+Uniquement une présentation google slide
+
+
+*screen2.html.erb
 L'écran alterne automatiquement entre :
 - **Google Slides** - Affiche votre présentation (8 slides × 15 secondes)
 - **Météo** - Affiche les prévisions météorologiques sur 4 jours
@@ -91,6 +96,7 @@ Les données météorologiques et marines sont mises à jour deux fois par jour 
 lodges-tv/
 ├── app/
 │   ├── views/screens/
+│   │   ├── screen1.html.erb       # Vue uniquement un google slide
 │   │   ├── screen2.html.erb       # Vue principale avec météo et données marines
 ├── public/                        # Fichiers statiques (CSS, images)
 ├── config/
