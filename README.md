@@ -124,6 +124,20 @@ const regularSlideDuration = 15000; // 15 secondes par écran régulier
 const googleSlidesDuration = 120000; // 120 secondes pour Google Slides
 ```
 
+### Personnalisation des styles (CSS)
+
+Les styles de l'application sont définis dans le dossier `app/assets/stylesheets/`. Les principaux fichiers sont :
+
+```
+app/assets/stylesheets/
+├── application.scss         # Fichier principal qui importe tous les autres styles
+├── components/              # Styles des composants réutilisables
+│   ├── _index.scss          # créer un fichier scss et ajouter dans index
+└── pages/                   # Styles spécifiques aux pages
+    └── _screens1.scss        # Styles des écrans d'affichage
+    └── _screens2.scss        # Styles des écrans d'affichage
+```
+
 ## ⚠️ Dépannage
 
 ### L'API renvoie trop d'appels
