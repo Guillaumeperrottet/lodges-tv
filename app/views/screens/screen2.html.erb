@@ -481,9 +481,9 @@
 
       console.log("Appel à l'API Stormglass pour la température de l'eau");
       fetch(STORMGLASS_URL, {
-        headers: {
-          'Authorization': STORMGLASS_API_KEY
-        }
+      headers: {
+        'Authorization': `Bearer ${STORMGLASS_API_KEY}`
+      }
       })
       .then(response => {
         if (!response.ok) {
