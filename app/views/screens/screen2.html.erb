@@ -122,27 +122,13 @@
     let currentFrame = 1;
     const googleSlidesUrl = "https://docs.google.com/presentation/d/e/2PACX-1vSvfKn36DdHtN34zAKaEmG6-yrkPRF2Pks08fXsoTy5M-SqQlYZ2njpUVGuqr5_S1ZrcEg4ZHOS9s5v/embed?start=true&loop=true&delayms=15000&rm=minimal";
 
-    // Constantes pour les API et la configuration
+    // Constantes pour les API
     const OPENWEATHER_API_KEY = "9556a80b8f760d847e244de8b062a80f";
     const STORMGLASS_API_KEY = "d2c7d6b0-f9ca-11ef-95f7-0242ac130003-d2c7d714-f9ca-11ef-95f7-0242ac130003";
     const LAT = 43.5;
     const LON = 4.9;
     const OPENWEATHER_API_URL = `https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=fr`;
     const STORMGLASS_URL = `https://api.stormglass.io/v2/weather/point?lat=${LAT}&lng=${LON}&params=waterTemperature&source=noaa`;
-
-    // Constantes pour les heures de mise à jour
-    const UPDATE_HOURS = [6, 12]; // Mise à jour à 6h et 12h
-    const CACHE_DURATION_HOURS = 6; // Durée de validité du cache en heures
-
-    // Constantes pour le stockage en cache
-    const CACHE_KEYS = {
-      WEATHER: 'weatherData',
-      WEATHER_TIME: 'weatherTime',
-      WATER_TEMP: 'sgWaterTempData',
-      WATER_TEMP_TIME: 'sgWaterTempTime',
-      TIDE: 'sgTideData',
-      TIDE_TIME: 'sgTideTime'
-    };
 
     function switchGoogleSlides() {
       const activeFrame = document.getElementById(`google-slides-${currentFrame}`);
@@ -188,76 +174,6 @@
       slideInterval = setInterval(showNextSlide, regularSlideDuration);
     }
 
-    // --- SYSTÈME DE CACHE ET DE MISE À JOUR À HEURES FIXES ---
-
-    // Fonction pour vérifier si nous devons mettre à jour les données
-    function shouldUpdateData() {
-      // Vérifie si c'est une heure de mise à jour programmée
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-
-      // Si nous sommes dans la première minute d'une heure de mise à jour programmée,
-      // ou si le cache est invalide, mettre à jour les données
-      return (UPDATE_HOURS.includes(currentHour) && currentMinute < 1) || !isCacheValid();
-    }
-
-    // Fonction pour vérifier si le cache est valide
-    function isCacheValid() {
-      const weatherCacheTime = localStorage.getItem(CACHE_KEYS.WEATHER_TIME);
-      if (!weatherCacheTime) return false;
-
-      const cacheDate = new Date(weatherCacheTime);
-      const now = new Date();
-      const hoursDiff = (now - cacheDate) / (1000 * 60 * 60); // Convert ms to hours
-
-      return hoursDiff < CACHE_DURATION_HOURS;
-    }
-
-    // Fonction pour planifier la prochaine vérification de mise à jour
-    function scheduleNextUpdate() {
-      const now = new Date();
-      let nextUpdateTime;
-
-      // Trouver la prochaine heure de mise à jour
-      let foundNextHour = false;
-
-      // Chercher dans les heures restantes d'aujourd'hui
-      for (const hour of UPDATE_HOURS) {
-        if (hour > now.getHours() || (hour === now.getHours() && now.getMinutes() < 1)) {
-          nextUpdateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, 0, 0);
-          foundNextHour = true;
-          break;
-        }
-      }
-
-      // Si aucune heure ne reste aujourd'hui, prendre la première heure de demain
-      if (!foundNextHour && UPDATE_HOURS.length > 0) {
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        nextUpdateTime = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), UPDATE_HOURS[0], 0, 0);
-      }
-
-      // Calculer le délai avant la prochaine mise à jour
-      const delay = nextUpdateTime - now;
-
-      // Programmer la prochaine vérification
-      console.log(`Prochaine vérification de mise à jour programmée à ${nextUpdateTime.toLocaleTimeString()}`);
-      setTimeout(checkForUpdates, delay);
-    }
-
-    // Fonction pour vérifier et effectuer les mises à jour
-    function checkForUpdates() {
-      if (shouldUpdateData()) {
-        console.log("Mise à jour des données météo et marines...");
-        fetchWeatherData();
-        fetchWaterTemperature();
-      }
-
-      // Planifier la prochaine vérification
-      scheduleNextUpdate();
-    }
-
     // --- METEO (One Call API 3.0) ---
     function fetchWeatherData() {
       const weatherContainer = document.getElementById("weather-container");
@@ -274,25 +190,12 @@
         })
         .then(data => {
           console.log("Données météo reçues :", data);
-
-          // Sauvegarder dans le cache
-          localStorage.setItem(CACHE_KEYS.WEATHER, JSON.stringify(data));
-          localStorage.setItem(CACHE_KEYS.WEATHER_TIME, new Date().toISOString());
-
           processWeatherData(data);
         })
         .catch(error => {
           console.error("Erreur lors de la récupération de la météo :", error);
-
-          // Essayer d'utiliser les données en cache comme solution de secours
-          const cachedData = localStorage.getItem(CACHE_KEYS.WEATHER);
-          if (cachedData) {
-            console.log("Utilisation des données en cache comme solution de secours");
-            processWeatherData(JSON.parse(cachedData));
-          } else {
-            weatherContainer.classList.remove('loading');
-            weatherContainer.innerHTML = "<p class='error-message'>Impossible de récupérer la météo pour le moment.</p>";
-          }
+          weatherContainer.classList.remove('loading');
+          weatherContainer.innerHTML = "<p class='error-message'>Impossible de récupérer la météo pour le moment.</p>";
         });
     }
 
@@ -492,7 +395,7 @@
       }
     }
 
-    // Function to fetch water temperature with caching
+    // Function to fetch water temperature
     function fetchWaterTemperature() {
       const waterTempElement = document.querySelector(".water-temp");
       const waterConditionsElement = document.querySelector(".water-conditions");
@@ -500,16 +403,6 @@
       if (!waterTempElement || !waterConditionsElement) {
         console.error("Éléments HTML pour la température de l'eau non trouvés");
         return;
-      }
-
-      // Si nous ne devons pas mettre à jour les données, utiliser le cache
-      if (!shouldUpdateData()) {
-        const cachedData = localStorage.getItem(CACHE_KEYS.WATER_TEMP);
-        if (cachedData) {
-          console.log("Utilisation des données en cache pour la température de l'eau");
-          processWaterTempData(JSON.parse(cachedData));
-          return;
-        }
       }
 
       console.log("Appel à l'API Stormglass pour la température de l'eau");
@@ -526,22 +419,10 @@
       })
       .then(data => {
         console.log("Données de température d'eau Stormglass reçues:", data);
-
-        // Sauvegarder dans le cache
-        localStorage.setItem(CACHE_KEYS.WATER_TEMP, JSON.stringify(data));
-        localStorage.setItem(CACHE_KEYS.WATER_TEMP_TIME, new Date().toISOString());
-
-        // Traiter les données
         processWaterTempData(data);
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données marines Stormglass:", error);
-        // Vérifier si nous avons des données en cache que nous pouvons utiliser
-        const cachedData = localStorage.getItem(CACHE_KEYS.WATER_TEMP);
-        if (cachedData) {
-          console.log("Utilisation du cache comme solution de secours");
-          processWaterTempData(JSON.parse(cachedData));
-        }
       });
     }
 
@@ -588,20 +469,8 @@
     // Démarrer le cycle de diapositives
     setTimeout(startRegularCycle, googleSlidesDuration);
 
-    // Lire les données depuis le cache au chargement initial
-    const weatherData = localStorage.getItem(CACHE_KEYS.WEATHER);
-    if (weatherData) {
-      console.log("Chargement des données météo depuis le cache");
-      processWeatherData(JSON.parse(weatherData));
-    } else {
-      // Première exécution, récupérer les données
-      fetchWeatherData();
-    }
-
-    // Charger les données marines depuis le cache ou les récupérer
+    // Récupérer les données météo et marines au chargement initial
+    fetchWeatherData();
     fetchWaterTemperature();
-
-    // Démarrer le cycle de vérification de mise à jour
-    checkForUpdates();
-  });
+});
 </script>
